@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"olsond.tech","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="TDSql部署手册">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TDSql部署手册">
+<meta property="og:url" content="https://olsond.tech/articles/2023/04/25/devops-TDSql%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="Olsond">
+<meta property="og:description" content="TDSql部署手册">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-04-25T05:58:25.759Z">
+<meta property="article:modified_time" content="2023-10-18T08:34:52.037Z">
+<meta property="article:author" content="olsond">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="td-sql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://olsond.tech/articles/2023/04/25/devops-TDSql%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>TDSql部署手册 | Olsond</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Olsond</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">try to be alive</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Olsondy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/04/25/devops-TDSql%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TDSql部署手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-25 13:58:25" itemprop="dateCreated datePublished" datetime="2023-04-25T13:58:25+08:00">2023-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-18 16:34:52" itemprop="dateModified" datetime="2023-10-18T16:34:52+08:00">2023-10-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Devops/" itemprop="url" rel="index"><span itemprop="name">Devops</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">TDSql部署手册</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>机器：</p>
+<ul>
+<li>主：<ul>
+<li>10.168.1.11</li>
+</ul>
+</li>
+<li>从<ul>
+<li>10.168.1.12</li>
+<li>10.168.1.13</li>
+<li>10.168.1.14</li>
+</ul>
+</li>
+</ul>
+<p>网卡：</p>
+<ul>
+<li>ens33</li>
+</ul>
+<h4 id="10-168-1-11"><a href="#10-168-1-11" class="headerlink" title="10.168.1.11"></a>10.168.1.11</h4><ol>
+<li><p>配置主机名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname mac1</span><br></pre></td></tr></table></figure></li>
+<li><p>添加主机名IP映射</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/hosts&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">10.168.1.11 mac1</span></span><br><span class="line"><span class="string">10.168.1.12 mac2</span></span><br><span class="line"><span class="string">10.168.1.13 mac3</span></span><br><span class="line"><span class="string">10.168.1.14 mac4</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开启时间同步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y -C install ntp</span><br><span class="line">cat &gt;&gt; /etc/ntp.conf&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">server 127.127.1.0 iburst</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">systemctl restart ntpd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>规划存储目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data</span><br><span class="line">mkdir -p /data1</span><br></pre></td></tr></table></figure></li>
+<li><p>配置免密登录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub 10.168.1.11</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub 10.168.1.12</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub 10.168.1.13</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub 10.168.1.14</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LANG=<span class="string">&#x27;en_US.UTF-8&#x27;</span></span><br><span class="line">cat &gt; /root/tdsql_10.3.17.3.0/tdsql_install/tdsql_hosts&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">[tdsql_allmacforcheck]</span></span><br><span class="line"><span class="string">tdsql_mac1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_mac2 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_mac3 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string">tdsql_mac4 ansible_ssh_host=10.168.1.14</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_zk]</span></span><br><span class="line"><span class="string">tdsql_zk1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_zk2 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_zk3 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_scheduler]</span></span><br><span class="line"><span class="string">tdsql_scheduler1 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_scheduler2 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_oss]</span></span><br><span class="line"><span class="string">tdsql_oss1 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_oss2 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_chitu]</span></span><br><span class="line"><span class="string">tdsql_chitu1 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_chitu2 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_monitor]</span></span><br><span class="line"><span class="string">tdsql_monitor1 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_monitor2 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_db]</span></span><br><span class="line"><span class="string">tdsql_db1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_db2 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_db3 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_proxy]</span></span><br><span class="line"><span class="string">tdsql_proxy1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_proxy2 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_proxy3 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_hdfs]</span></span><br><span class="line"><span class="string">tdsql_hdfs1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_lvs]</span></span><br><span class="line"><span class="string">tdsql_lvs1 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_lvs2 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_kafka]</span></span><br><span class="line"><span class="string">tdsql_kafka1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_kafka2 ansible_ssh_host=10.168.1.12</span></span><br><span class="line"><span class="string">tdsql_kafka3 ansible_ssh_host=10.168.1.13</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_consumer]</span></span><br><span class="line"><span class="string">tdsql_consumer1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_es]</span></span><br><span class="line"><span class="string">tdsql_es1 ansible_ssh_host=10.168.1.11</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_mc]</span></span><br><span class="line"><span class="string">tdsql_mc1 ansible_ssh_host=1.1.1.1</span></span><br><span class="line"><span class="string">tdsql_mc2 ansible_ssh_host=1.1.1.1</span></span><br><span class="line"><span class="string">tdsql_mc3 ansible_ssh_host=1.1.1.1</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_newdb]</span></span><br><span class="line"><span class="string">tdsql_newdb1 ansible_ssh_host=1.1.1.1</span></span><br><span class="line"><span class="string">tdsql_newdb2 ansible_ssh_host=2.2.2.2</span></span><br><span class="line"><span class="string">tdsql_newdb3 ansible_ssh_host=3.3.3.3</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">[tdsql_ansible_test]</span></span><br><span class="line"><span class="string">tdsql_ansible_test1 ansible_ssh_host=1.1.1.1</span></span><br><span class="line"><span class="string">tdsql_ansible_test2 ansible_ssh_host=2.2.2.2</span></span><br><span class="line"><span class="string">tdsql_ansible_test3 ansible_ssh_host=3.3.3.3</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">cat &gt; /root/tdsql_10.3.17.3.0/tdsql_install/group_vars/all&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string"># scheduler,oss机器网卡</span></span><br><span class="line"><span class="string">tdsql_sche_netif: ens33</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 操作系统账号tdsql的明文密码</span></span><br><span class="line"><span class="string"># 如果有规划要部署两个集群做DCN同步, 则这两个集群的tdsql密码要一致</span></span><br><span class="line"><span class="string">tdsql_os_pass: a+complex+password</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># tdsql在zk上的根路径, 保持默认不允许修改</span></span><br><span class="line"><span class="string">tdsql_zk_rootdir: /tdsqlzk</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># zk机器的域名配置, 会写入各配置文件, 并将域名配置到/etc/hosts中</span></span><br><span class="line"><span class="string"># 正式环境必须用机房或者地区的关键字, 有意义的关键字来命名</span></span><br><span class="line"><span class="string"># 如果部署多套TDSQL集群, 则名字需要唯一</span></span><br><span class="line"><span class="string"># 例如: 深圳机房zk的域名可以定义为tdsql_sz_zk</span></span><br><span class="line"><span class="string">tdsql_zk_domain_name: tdsql_test_zk</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># zk端口配置, 保持默认不要改,如果是自建的zk, 则和已有zk端口保持一致</span></span><br><span class="line"><span class="string">tdsql_zk_clientport: 2118</span></span><br><span class="line"><span class="string">tdsql_zk_serverport1: 2338</span></span><br><span class="line"><span class="string">tdsql_zk_serverport2: 2558</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 赤兔监控库配置, 赤兔初始化完成后需要将监控库信息在这里更新</span></span><br><span class="line"><span class="string">tdsql_metadb_ip: 10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_metadb_port: 15001</span></span><br><span class="line"><span class="string">tdsql_metadb_ip_bak: 10.168.1.11</span></span><br><span class="line"><span class="string">tdsql_metadb_port_bak: 15001</span></span><br><span class="line"><span class="string">tdsql_metadb_user: hanlon</span></span><br><span class="line"><span class="string">tdsql_metadb_password: 123456</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># hdfs机器的ssh端口</span></span><br><span class="line"><span class="string">tdsql_hdfs_ssh: 22</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># hdfs数据目录, 正式环境要求mount挂载比较大的数据盘</span></span><br><span class="line"><span class="string">tdsql_hdfs_datadir: /data2/hdfs,/data3/hdfs,/data4/hdfs</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># kafka日志目录，正式环境要求mount挂载比较大的数据盘</span></span><br><span class="line"><span class="string">tdsql_kafka_logdir: /data2/kafka,/data3/kafka,/data4/kafka</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 多源同步消费服务的机器网卡</span></span><br><span class="line"><span class="string">tdsql_consumer_netif: ens33</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># es7配置</span></span><br><span class="line"><span class="string">tdsql_es7_mem: 4</span></span><br><span class="line"><span class="string">tdsql_es7_base_path: /data1/es</span></span><br><span class="line"><span class="string">tdsql_helper_cluster_name: tdsql</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 一致性读MC机器的网卡, 需要安装MC时配置</span></span><br><span class="line"><span class="string">tdsql_mc_netif: ens33</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">update_tdsqlinstall_packet: mysqlagent</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li><p>安装ansible</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mv /root/init_env_packet.sh /root/tdsql_10.3.17.3.0/tdsql_install/roles/tdsql_beginning/files/shell_scripts/init_env_packet.sh</span><br><span class="line"><span class="built_in">cd</span> /root/tdsql_10.3.17.3.0/tdsql_install/scripts</span><br><span class="line"><span class="built_in">source</span> environment_set</span><br><span class="line">sh install_ansible.sh</span><br></pre></td></tr></table></figure></li>
+<li><p>TDSQL安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/tdsql_10.3.17.3.0/tdsql_install</span><br><span class="line">ansible-playbook -i tdsql_hosts playbooks/tdsql_part1_site.yml</span><br></pre></td></tr></table></figure></li>
+<li><p>赤兔初始化</p>
+<ol>
+<li>访问地址：<a target="_blank" rel="noopener" href="http://10.168.1.11/tdsqlpcloud">http://10.168.1.11/tdsqlpcloud</a></li>
+</ol>
+</li>
+</ol>
+<h4 id="10-168-1-12"><a href="#10-168-1-12" class="headerlink" title="10.168.1.12"></a>10.168.1.12</h4><ol>
+<li><p>配置主机名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname mac2</span><br></pre></td></tr></table></figure></li>
+<li><p>添加主机名IP映射</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/hosts&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">10.168.1.11 mac1</span></span><br><span class="line"><span class="string">10.168.1.12 mac2</span></span><br><span class="line"><span class="string">10.168.1.13 mac3</span></span><br><span class="line"><span class="string">10.168.1.14 mac4</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开启时间同步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum -y -C install ntp</span><br><span class="line">cat &gt;&gt; /etc/ntp.conf&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">server 10.168.1.11</span></span><br><span class="line"><span class="string">restrict 10.168.1.11 mask 255.255.255.0 nomodify notrap</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">systemctl restart ntpd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>规划存储目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data</span><br><span class="line">mkdir -p /data1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="10-168-1-13"><a href="#10-168-1-13" class="headerlink" title="10.168.1.13"></a>10.168.1.13</h4><ol>
+<li><p>配置主机名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname mac3</span><br></pre></td></tr></table></figure></li>
+<li><p>添加主机名IP映射</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/hosts&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">10.168.1.11 mac1</span></span><br><span class="line"><span class="string">10.168.1.12 mac2</span></span><br><span class="line"><span class="string">10.168.1.13 mac3</span></span><br><span class="line"><span class="string">10.168.1.14 mac4</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开启时间同步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum -y -C install ntp</span><br><span class="line">cat &gt;&gt; /etc/ntp.conf&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">server 10.168.1.11</span></span><br><span class="line"><span class="string">restrict 10.168.1.11 mask 255.255.255.0 nomodify notrap</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">systemctl restart ntpd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>规划存储目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data</span><br><span class="line">mkdir -p /data1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="10-168-1-14"><a href="#10-168-1-14" class="headerlink" title="10.168.1.14"></a>10.168.1.14</h4><ol>
+<li><p>配置主机名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname mac4</span><br></pre></td></tr></table></figure></li>
+<li><p>添加主机名IP映射</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/hosts&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">10.168.1.11 mac1</span></span><br><span class="line"><span class="string">10.168.1.12 mac2</span></span><br><span class="line"><span class="string">10.168.1.13 mac3</span></span><br><span class="line"><span class="string">10.168.1.14 mac4</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开启时间同步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum -y -C install ntp</span><br><span class="line">cat &gt;&gt; /etc/ntp.conf&lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">server 10.168.1.11</span></span><br><span class="line"><span class="string">restrict 10.168.1.11 mask 255.255.255.0 nomodify notrap</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">systemctl restart ntpd.service</span><br></pre></td></tr></table></figure></li>
+<li><p>规划存储目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data</span><br><span class="line">mkdir -p /data1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p>参考文档：<a target="_blank" rel="noopener" href="https://blog.csdn.net/maibaizhou/article/details/124509511">https://blog.csdn.net/maibaizhou/article/details/124509511</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/database/" rel="tag"># database</a>
+              <a href="/tags/td-sql/" rel="tag"># td-sql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/04/24/devops-docker%E7%9A%84%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" rel="prev" title="docker的使用">
+      <i class="fa fa-chevron-left"></i> docker的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/04/25/devops-Start-jar-for-linux/" rel="next" title="java应用启动脚本以及配置文件的优先级">
+      java应用启动脚本以及配置文件的优先级 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-168-1-11"><span class="nav-number">1.</span> <span class="nav-text">10.168.1.11</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-168-1-12"><span class="nav-number">2.</span> <span class="nav-text">10.168.1.12</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-168-1-13"><span class="nav-number">3.</span> <span class="nav-text">10.168.1.13</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-168-1-14"><span class="nav-number">4.</span> <span class="nav-text">10.168.1.14</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="olsond"
+      src="/images/avatar_timi.jpeg">
+  <p class="site-author-name" itemprop="name">olsond</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Olsondy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Olsondy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/javady" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;javady" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">olsond</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
