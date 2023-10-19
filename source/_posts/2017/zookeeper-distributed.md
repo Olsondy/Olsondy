@@ -1,11 +1,12 @@
 ---
 title: 基于Zookeeper分布式应用集中配置管理
-categories: Develop
+categories: Devops
 comments: true
 keywords: zookeeper
-tags: [Java]
+tags: [linux,zookeeper]
 description: 配置集中管理搭建-分布式应用配置工具包config-toolkit 用于集群配置向 zookeeper的迁移
-date: 2017-07-27
+created: '2017-07-27T13:00:31.050Z'
+modified: '2023-09-25T06:00:01.081Z'
 ---
 
 # 配置集中管理搭建

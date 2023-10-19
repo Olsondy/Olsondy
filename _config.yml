@@ -39,7 +39,10 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
+marked:
+  prependRoot: true
+  postAsset: true
 relative_link: false
 future: true
 highlight:
@@ -102,5 +105,5 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repository: git@github.com:Olsondy/OlsondyBlog.git
-  branch: master
+  repository: git@github.com:Olsondy/Olsondy.git
+  branch: main

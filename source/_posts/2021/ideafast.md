@@ -3,12 +3,11 @@ title: IDEA快捷键 (MacOS版)
 categories: Devtools
 comments: true
 keywords: idea
-tags: [Idea]
+tags: [macos,idea]
 description: Mac Intellij IDEA 快捷键的使用
-date: 2017-03-22
+created: '2017-03-22T16:00:31.050Z'
+modified: '2023-09-25T06:00:01.081Z'
 ---
-
-> “idea mac ”
 
 Mac键盘符号和修饰键说明
 > * ⌘ Command

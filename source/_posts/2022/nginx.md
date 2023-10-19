@@ -2,10 +2,11 @@
 title: CentOS安装nginx
 categories: Devops
 comments: true
-keywords: nginx
-tags: [Linux]
+keywords: centos,nginx
+tags: [linux,centos,nginx]
 description: CentOS安装nginx及简单使用
-date: 2021-12-16
+created: '2022-11-12T16:00:31.050Z'
+modified: '2023-04-25T06:00:01.081Z'
 ---
 
 

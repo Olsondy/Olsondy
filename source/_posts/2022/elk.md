@@ -3,9 +3,10 @@ title: ElasticSearch和Kibana安装及简单使用
 categories: Devops
 comments: true
 keywords: elastic,kibana
-tags: [Elastic]
+tags: [database,elastic,kibana]
 description: 在MacOS上使用homebrew安装ElasticSearch和Kibana及简单使用
-date: 2021-12-17
+created: '2021-12-17T11:00:01.050Z'
+modified: '2023-09-25T06:00:01.081Z'
 ---
 
 
@@ -24,13 +25,12 @@ date: 2021-12-17
   brew install elastic/tap/kibana-full
   ```
 - 接下来就是等待, 直到出现 (es安装也是一样)
-  ```shell
-   To have launchd start elastic/tap/kibana-full now and restart at login:
+```shell
+ To have launchd start elastic/tap/kibana-full now and restart at login:
      brew services start elastic/tap/kibana-full
    Or, if you don't want/need a background service you can just run:
      kibana
-  ```
-
+```
 ## Q.A
 >- _tap方式安装会出现连接443 timeout的问题, 由于elastic/tap包在github上, 我这边没有做什么代理和科学上网方式, 多试了几次就成功了._
 

@@ -1,16 +1,17 @@
 ---
-title: vue-scaffold
-categories: develop
+title: 初学vue搭建项目脚手架
+categories: Develop
 comments: true
-keywords: vuejs
-tags: [开发]
+keywords: vuejs, javascript
+tags: [workspace, vuejs, javascript]
 description: 一个使用vuejs搭建的项目脚手架
-date: 2018-04-24
+created: '2018-04-24T16:00:31.050Z'
+modified: '2023-09-25T06:00:01.081Z'
 ---
 
 ## SPA应用 ？ ##
 - SPA应用的概念
-> - SPA (Signle Page Application) 整个webapp就一个html文件，里面的各个功能页面是javascript通过hash,或者history api来进行路由，并通过ajax拉取数据来实现响应功能。因为整个webapp就一个html，所以叫单页面！
+> - SPA (Signle Page Application) 整个webapp就一个html文件，里面的各个功能页面是javascript通过hash,或者history api来进行路由，并通过ajax拉取数据来实现响应功能。因为整个webapp就一个html，所以叫单页应用
 
 - 优势
 > - 前后端职责分离，架构清晰：前端进行交互逻辑，后端负责数据处理。
@@ -32,7 +33,7 @@ Authority Management System (权限管理系统)
 - 开发工具
 	- 规定使用`webstorm 2017.2 + eslint + babel`
 - 简要规范
- - 使用 ES6/ES2015 来编写代码。
+ - 使用 ES6(ES2015) 来编写代码。
  - `npm install` 成功后,在`webstorm`中设置`eslint`环境,遵守当前项目的`eslint`规范
  - 按钮统一使用`iview UI`的`<Button>`组件
  - 表单统一使用`iview UI`的表单组件
@@ -48,18 +49,18 @@ Authority Management System (权限管理系统)
  基于Chrome内核的现代浏览器和Internet Explorer 10+
 
 ## 功能 ##
-- [x] 布局(菜单、头部、导航、内容)
-- [x] 路由导航,动态侧边栏（支持多级路由）
-- [x] 查询表单的自适应,分页表格功能
-- [x] 表单 (选择组件、可搜索选择组件)
-- [x] http请求封装(get post put delete)
-- [x] store 状态数据存储
-- [x] mock数据
-- [x] http请求的国际化
-- [x] 与后台交互增删改查的例子
-- [x] 多环境发布
-- [x] 按钮权限设计
-- [x] 多语言、换肤切换
+- [ ] 布局(菜单、头部、导航、内容)
+- [ ] 路由导航,动态侧边栏（支持多级路由）
+- [ ] 查询表单的自适应,分页表格功能
+- [ ] 表单 (选择组件、可搜索选择组件)
+- [ ] http请求封装(get post put delete)
+- [ ] store 状态数据存储
+- [ ] mock数据
+- [ ] http请求的国际化
+- [ ] 与后台交互增删改查的例子
+- [ ] 多环境发布
+- [ ] 按钮权限设计
+- [ ] 多语言、换肤切换
 
 
 ## 目录结构介绍 ##
