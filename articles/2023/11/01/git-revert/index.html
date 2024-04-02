@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"olsond.tech","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="git revert 使用场景场景 A分支、 dev分支 A分支合并到dev(commit A)后需要回滚 ,使用git revert commitId回滚,并产生一次revert 后的commit记录(commit B) A分支继续开发了新内容再次提交到dev, 导致之前commit A的记录再无法合并.分析 A分支合并到dev分支, 将commit A的合并请求revert, 产生一次新的re">
+  <meta name="description" content="工作备忘记录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git-revert">
+<meta property="og:title" content="git revert">
 <meta property="og:url" content="https://olsond.tech/articles/2023/11/01/git-revert/index.html">
 <meta property="og:site_name" content="Olsond">
-<meta property="og:description" content="git revert 使用场景场景 A分支、 dev分支 A分支合并到dev(commit A)后需要回滚 ,使用git revert commitId回滚,并产生一次revert 后的commit记录(commit B) A分支继续开发了新内容再次提交到dev, 导致之前commit A的记录再无法合并.分析 A分支合并到dev分支, 将commit A的合并请求revert, 产生一次新的re">
+<meta property="og:description" content="工作备忘记录">
 <meta property="og:locale">
 <meta property="og:image" content="https://olsond.tech/articles/2023/11/01/git-revert/git-revert.png">
 <meta property="article:published_time" content="2023-11-01T09:49:02.690Z">
-<meta property="article:modified_time" content="2023-11-01T09:52:54.071Z">
+<meta property="article:modified_time" content="2023-12-12T09:02:00.944Z">
 <meta property="article:author" content="olsond">
 <meta property="article:tag" content="workspace">
 <meta name="twitter:card" content="summary">
@@ -48,7 +48,7 @@
   };
 </script>
 
-  <title>git-revert | Olsond</title>
+  <title>git revert | Olsond</title>
   
 
 
@@ -154,7 +154,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/01/git-revert/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -164,7 +164,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          git-revert
+          git revert
         </h1>
 
         <div class="post-meta">
@@ -173,21 +173,28 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-01 17:49:02 / 修改时间：17:52:54" itemprop="dateCreated datePublished" datetime="2023-11-01T17:49:02+08:00">2023-11-01</time>
+              <time title="创建时间：2023-11-01 17:49:02" itemprop="dateCreated datePublished" datetime="2023-11-01T17:49:02+08:00">2023-11-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-12 17:02:00" itemprop="dateModified" datetime="2023-12-12T17:02:00+08:00">2023-12-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Devtools/" itemprop="url" rel="index"><span itemprop="name">Devtools</span></a>
+                  <a href="/categories/Devops/" itemprop="url" rel="index"><span itemprop="name">Devops</span></a>
                 </span>
             </span>
 
           
+            <div class="post-description">工作备忘记录</div>
 
         </div>
       </header>
@@ -198,12 +205,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="git-revert-使用场景"><a href="#git-revert-使用场景" class="headerlink" title="git revert 使用场景"></a>git revert 使用场景</h2><h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><ul>
+        <h1 id="git-revert-使用场景"><a href="#git-revert-使用场景" class="headerlink" title="git revert 使用场景"></a>git revert 使用场景</h1><h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><ul>
 <li>A分支、 dev分支</li>
 <li>A分支合并到dev(commit A)后需要回滚 ,使用<code>git revert commitId</code>回滚,并产生一次revert 后的commit记录(commit B)</li>
-<li>A分支继续开发了新内容再次提交到dev, 导致之前commit A的记录再无法合并.<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3></li>
+<li>A分支继续开发了新内容再次提交到dev, 导致之前commit A的记录再无法合并.<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2></li>
 <li>A分支合并到dev分支, 将commit A的合并请求revert, 产生一次新的revert的commit B记录, 只回滚该次合并的代码记录,不影响其他分支线提交记录</li>
-<li>A分支再次提交, revert之前的commit A的相关代码是在commit B之后的, 新的commit B记录会被认为是最新的时间线, 不会被认为有改动<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3></li>
+<li>A分支再次提交, revert之前的commit A的相关代码是在commit B之后的, 新的commit B记录会被认为是最新的时间线, 不会被认为有改动<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2></li>
 <li>分析完很简单, 再次将commit B 再次revert操作再提交commit.<br><img src="/articles/2023/11/01/git-revert/git-revert.png"></li>
 </ul>
 
@@ -228,8 +235,8 @@
       <i class="fa fa-chevron-left"></i> 
     </a></div>
       <div class="post-nav-item">
-    <a href="/articles/2023/11/02/replay-attack/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/articles/2023/11/02/replay-attack/" rel="next" title="http接口请求的重放攻击">
+      http接口请求的重放攻击 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -289,14 +296,14 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-revert-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">git revert 使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">1.3.</span> <span class="nav-text">解决</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git-revert-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">git revert 使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">1.3.</span> <span class="nav-text">解决</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="olsond"
-      src="/images/avatar_timi.jpeg">
+      src="/images/avatar_olsond.jpg">
   <p class="site-author-name" itemprop="name">olsond</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -304,7 +311,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -315,7 +322,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -350,7 +357,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

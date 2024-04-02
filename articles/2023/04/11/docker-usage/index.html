@@ -28,7 +28,7 @@
 <meta property="og:description" content="docker的安装与简单使用">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-04-11T10:27:27.290Z">
-<meta property="article:modified_time" content="2023-11-22T03:08:42.896Z">
+<meta property="article:modified_time" content="2024-03-22T13:52:12.557Z">
 <meta property="article:author" content="olsond">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="docker">
@@ -153,7 +153,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/04/11/docker-usage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -180,7 +180,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-11-22 11:08:42" itemprop="dateModified" datetime="2023-11-22T11:08:42+08:00">2023-11-22</time>
+                <time title="修改时间：2024-03-22 21:52:12" itemprop="dateModified" datetime="2024-03-22T21:52:12+08:00">2024-03-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -205,7 +205,7 @@
 
       
         <h1 id="Install-docker"><a href="#Install-docker" class="headerlink" title="Install docker"></a>Install docker</h1><h1 id="Docker-commands"><a href="#Docker-commands" class="headerlink" title="Docker commands"></a>Docker commands</h1><ul>
-<li>command<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）  #Docker image rename</span><br></pre></td></tr></table></figure></li>
+<li>command<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 镜像重命名</span></span><br><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）  #Docker image rename</span><br><span class="line"><span class="meta">#</span><span class="bash"> 备份镜像</span></span><br><span class="line">docker save -o 镜像导出文件(格式为tar压缩文件) 镜像ID或镜像名称[:版本号]</span><br><span class="line">或</span><br><span class="line">docker save 镜像ID或镜像名称[:版本号] &gt; 镜像导出文件(格式为tar压缩文件)</span><br><span class="line">e.g:</span><br><span class="line">docker save -o $(pwd)/mytomcat.tar newtomcat:v1.0</span><br><span class="line">或</span><br><span class="line">docker save newtomcat:v1.0 &gt; $(pwd)/mytomcat.tar</span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复镜像</span></span><br><span class="line">docker load -i 镜像导出文件(格式为tar压缩文件)</span><br><span class="line">或</span><br><span class="line">docker load &lt; 镜像导出文件(格式为tar压缩文件)</span><br><span class="line"></span><br><span class="line">e.g:</span><br><span class="line">docker load -i $(pwd)/mytomcat.tar </span><br><span class="line">或 </span><br><span class="line">docker load &lt; $(pwd)/mytomcat.tar</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">备份容器</span></span><br><span class="line">docker export -o 容器导出文件(格式为tar压缩文件) 容器ID或容器名称  </span><br><span class="line">或</span><br><span class="line">docker export 容器ID或容器名称 &gt; 容器导出文件(格式为tar压缩文件) </span><br><span class="line"></span><br><span class="line">e.g:</span><br><span class="line">docker export -o $(pwd)/newtomcat.tar mytomcat</span><br><span class="line">或</span><br><span class="line">docker export mytomcat &gt; $(pwd)/newtomcat.tar </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">恢复容器</span></span><br><span class="line">docker import 容器导出文件(格式为tar压缩文件) 新镜像名称[:版本号]</span><br><span class="line">或</span><br><span class="line">docker import /URL 新镜像名称[:版本号]</span><br><span class="line">e.g: </span><br><span class="line">docker import $(pwd)/newtomcat.tar newtomcat:v1.0</span><br><span class="line">或</span><br><span class="line">docker import http://example.com/exampleimage.tgz example/imagerepo</span><br><span class="line"></span><br><span class="line">注释：</span><br><span class="line"><span class="meta">$</span><span class="bash">(<span class="built_in">pwd</span>)是docker支持的获取当前目录路径的方法，与linux的<span class="built_in">pwd</span>类似</span></span><br><span class="line"><span class="meta">$</span><span class="bash">(<span class="built_in">pwd</span>)/newtomcat.tar 表示在当前目录下生成一个newtomcat.tar压缩文件</span></span><br><span class="line"></span><br><span class="line">备注：</span><br><span class="line">容器可以不启动进行备份操作</span><br></pre></td></tr></table></figure></li>
 <li>docker run params<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]    </span><br><span class="line"></span><br><span class="line">-d, --detach=false         指定容器运行于前台还是后台，默认为false     </span><br><span class="line">-i, --interactive=false   打开STDIN，用于控制台交互    </span><br><span class="line">-t, --tty=false            分配tty设备，该可以支持终端登录，默认为false    </span><br><span class="line">-u, --user=&quot;&quot;              指定容器的用户    </span><br><span class="line">-a, --attach=[]            登录容器（必须是以docker run -d启动的容器）  </span><br><span class="line">-w, --workdir=&quot;&quot;           指定容器的工作目录   </span><br><span class="line">-c, --cpu-shares=0        设置容器CPU权重，在CPU共享场景使用    </span><br><span class="line">-e, --env=[]               指定环境变量，容器中可以使用该环境变量    </span><br><span class="line">-m, --memory=&quot;&quot;            指定容器的内存上限    </span><br><span class="line">-P, --publish-all=false    指定容器暴露的端口    </span><br><span class="line">-p, --publish=[]           指定容器暴露的端口   </span><br><span class="line">-h, --hostname=&quot;&quot;          指定容器的主机名    </span><br><span class="line">-v, --volume=[]            给容器挂载存储卷，挂载到容器的某个目录    </span><br><span class="line">--volumes-from=[]          给容器挂载其他容器上的卷，挂载到容器的某个目录  </span><br><span class="line">--cap-add=[]               添加权限，权限清单详见：http://linux.die.net/man/7/capabilities    </span><br><span class="line">--cap-drop=[]              删除权限，权限清单详见：http://linux.die.net/man/7/capabilities    </span><br><span class="line">--cidfile=&quot;&quot;               运行容器后，在指定文件中写入容器PID值，一种典型的监控系统用法    </span><br><span class="line">--cpuset=&quot;&quot;                设置容器可以使用哪些CPU，此参数可以用来容器独占CPU    </span><br><span class="line">--device=[]                添加主机设备给容器，相当于设备直通    </span><br><span class="line">--dns=[]                   指定容器的dns服务器    </span><br><span class="line">--dns-search=[]            指定容器的dns搜索域名，写入到容器的/etc/resolv.conf文件    </span><br><span class="line">--entrypoint=&quot;&quot;            覆盖image的入口点    </span><br><span class="line">--env-file=[]              指定环境变量文件，文件格式为每行一个环境变量    </span><br><span class="line">--expose=[]                指定容器暴露的端口，即修改镜像的暴露端口    </span><br><span class="line">--link=[]                  指定容器间的关联，使用其他容器的IP、env等信息    </span><br><span class="line">--lxc-conf=[]              指定容器的配置文件，只有在指定--exec-driver=lxc时使用    </span><br><span class="line">--name=&quot;&quot;                  指定容器名字，后续可以通过名字进行容器管理，links特性需要使用名字    </span><br><span class="line">--net=&quot;bridge&quot;             容器网络设置:  </span><br><span class="line">                           bridge 使用docker daemon指定的网桥       </span><br><span class="line">                           host    //容器使用主机的网络    </span><br><span class="line">                           container:NAME_or_ID  &gt;//使用其他容器的网路，共享IP和PORT等网络资源    </span><br><span class="line">                           none 容器使用自己的网络（类似--net=bridge），但是不进行配置   </span><br><span class="line">--privileged=false         指定容器是否为特权容器，特权容器拥有所有的capabilities    </span><br><span class="line">--restart=&quot;no&quot;             指定容器停止后的重启策略:  </span><br><span class="line">                           no：容器退出时不重启    </span><br><span class="line">                           on-failure：容器故障退出（返回值非零）时重启   </span><br><span class="line">                           always：容器退出时总是重启    </span><br><span class="line">--rm=false                 指定容器停止后自动删除容器(不支持以docker run -d启动的容器)    </span><br><span class="line">--sig-proxy=true           设置由代理接受并处理信号，但是SIGCHLD、SIGSTOP和SIGKILL不能被代理    </span><br></pre></td></tr></table></figure></li>
 <li>add network route<br>route -p add 172.17.0.0 mask 255.255.0.0 192.168.93.129<br>route -p add 172.18.0.0 mask 255.255.255.0 192.168.93.129<br>route -p add 172.19.0.0 mask 255.255.255.0 192.168.99.100</li>
 </ul>
@@ -242,8 +242,11 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -e POSTGRES_PASSWORD=olsond@dy -p 5433:5432 -v /Users/dy/DevSoftWare/developer/docker-data/postgres/data:/var/lib/postgresql/data -d postgres</span><br></pre></td></tr></table></figure></li>
 <li><p>onlyoffice</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run  -d --name onlyoffice -p 9011:80 \</span><br><span class="line">    -v /home/docker-data/onlyoffice/logs:/var/log/onlyoffice  \</span><br><span class="line">    -v /home/docker-data/onlyoffice/data:/var/www/onlyoffice/Data  onlyoffice/documentserver</span><br><span class="line"><span class="meta">#</span><span class="bash"> 拷贝出配置文件修改 example 地址</span></span><br><span class="line">docker cp /Users/dy/Desktop/default.json containerId:/etc/onlyoffice/documentserver-example/default.json</span><br></pre></td></tr></table></figure></li>
-<li><p>docker 容器访问mac/windows主机网络可以使用 <code>host.docker.internal</code>域名解决问题</p>
-</li>
+<li><p>ribbitmq</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> podman run -d --name rabbitmq -p 5673:5672 -p 15673:15672 \</span><br><span class="line">-v /home/olsond/data/podman_data/rabbit:/var/lib/rabbitmq \</span><br><span class="line">-e RABBITMQ_DEFAULT_VHOST=/chat \</span><br><span class="line">-e RABBITMQ_DEFAULT_USER=admin \</span><br><span class="line">-e RABBITMQ_DEFAULT_PASS=123456 \</span><br><span class="line">rabbitmq:3.8.34-management</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li>docker 容器访问mac/windows主机网络可以使用 <code>host.docker.internal</code>域名解决问题</li>
 </ul>
 
     </div>
@@ -336,7 +339,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="olsond"
-      src="/images/avatar_timi.jpeg">
+      src="/images/avatar_olsond.jpg">
   <p class="site-author-name" itemprop="name">olsond</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -344,7 +347,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -355,7 +358,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -390,7 +393,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

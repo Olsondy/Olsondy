@@ -143,10 +143,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/12/04/h2/">
+    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2024/01/03/develop-uniapp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -157,7 +157,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/12/04/h2/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/articles/2024/01/03/develop-uniapp/" class="post-title-link" itemprop="url">使用vue3+vite+ts开发uniapp</a>
         </h2>
 
         <div class="post-meta">
@@ -167,118 +167,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-12-04 18:12:17" itemprop="dateCreated datePublished" datetime="2023-12-04T18:12:17+08:00">2023-12-04</time>
+              <time title="创建时间：2024-01-03 10:14:15" itemprop="dateCreated datePublished" datetime="2024-01-03T10:14:15+08:00">2024-01-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-05 15:13:04" itemprop="dateModified" datetime="2023-12-05T15:13:04+08:00">2023-12-05</time>
+                <time title="修改时间：2024-04-02 16:23:59" itemprop="dateModified" datetime="2024-04-02T16:23:59+08:00">2024-04-02</time>
               </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="h2-数据库"><a href="#h2-数据库" class="headerlink" title="h2 数据库"></a>h2 数据库</h1><blockquote>
-<p> H2是一个采用java语言编写的嵌入式数据库引擎，只是一个类库（即只有一个 jar 文件），可以直接嵌入到应用项目中，不受平台的限制</p>
-</blockquote>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
-<li>可以同应用程序打包在一起发布，可以非常方便地存储少量结构化数据</li>
-<li>可用于单元测试</li>
-<li>可以用作缓存，即当做内存数据库<h2 id="连接模式"><a href="#连接模式" class="headerlink" title="连接模式"></a>连接模式</h2><h2 id="tcp-服务模式"><a href="#tcp-服务模式" class="headerlink" title="tcp 服务模式"></a>tcp 服务模式</h2><blockquote>
-<p>服务器模式（Server Mode）：使用服务器模式和内嵌模式一样，它可以跑在另一个进程里</p>
-</blockquote>
-</li>
-<li>启动一个h2 作为server模式<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -classpath h2-2.1.212.jar org.h2.tools.Server -ifNotExists -tcp -tcpPort 9092 -tcpAllowOthers -web -webPort 8092 -browser -webAllowOthers</span><br></pre></td></tr></table></figure>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3></li>
-<li><code>-ifNotExists</code> 允许自动创建数据库</li>
-<li><code>-tcp</code> 启动tcp连接访问模式, 其他应用可以使用tcp方式连接到h2</li>
-<li><code>-tcpPort</code> tcp连接端口号</li>
-<li><code>-tcpAllowOthers</code> 允许多个tcp连接</li>
-<li><code>-web</code> 启动web控制台</li>
-<li><code>-webPort</code> web访问端口号</li>
-<li><code>-browser</code> 浏览器访问</li>
-<li><code>-webAllowOthers</code> web控制台允许多个访问<h3 id="内存模式"><a href="#内存模式" class="headerlink" title="内存模式"></a>内存模式</h3><blockquote>
-<p>内嵌模式（Embedded Mode）：内嵌模式下，应用和数据库同在一个JVM中，通过JDBC进行连接。可持久化，但同时只能一个客户端连接。内嵌模式性能会比较好</p>
-</blockquote>
-</li>
-</ul>
-<p><img src="/articles/2023/12/04/h2/embed-me.png"></p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="作为服务端使用"><a href="#作为服务端使用" class="headerlink" title="作为服务端使用"></a>作为服务端使用</h3><ul>
-<li>tcp模式首先要使用启动命令来启动一个h2服务端, 供其他应用使用tcp方式连接才可以</li>
-<li>启动成功后会在<code>jdbc url</code> 指定的目录生成俩个文件 <code>*.mv.db</code> 和 <code>*.trace.db</code>, 前者是数据存储文件后者是日志文件</li>
-<li>h2会在<code>~</code>目录(当前用户目录)生成配置记录文件 <code>.h2.server.properties</code>, windows在<code>C:\Users\用户名\</code> , linux 在 <code>/Users/用户名/</code><h3 id="与spring-boot集成"><a href="#与spring-boot集成" class="headerlink" title="与spring-boot集成"></a>与spring-boot集成</h3></li>
-<li>yaml配置文件, 下面使用的是内存模式<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:h2:mem:chore;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</span>   <span class="comment">#mem：连接到内存</span></span><br><span class="line"><span class="comment">#    url: jdbc:h2:file:~/chore;MODE=MySQL;AUTO_SERVER=true  #file 连接到文件</span></span><br><span class="line"><span class="comment">#    url: jdbc:h2:tcp://localhost/~/DevSoftWare/developer/h2-data/chore;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE  # tcp  连接到tcp</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">org.h2.Driver</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">olsond</span></span><br><span class="line">    <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">    <span class="comment">#  spring-boot2.5.x以下版本使用</span></span><br><span class="line">    <span class="comment"># schema: classpath: classpath:db/schema.sql</span></span><br><span class="line"> <span class="comment"># springboot2.5.x以上版本已弃用spring.datasource.schema属性,可以使用以下配置初始化sql</span></span><br><span class="line">  <span class="attr">sql:</span> </span><br><span class="line">    <span class="attr">init:</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">always</span></span><br><span class="line">      <span class="attr">schema-locations:</span> [<span class="string">&#x27;classpath:db/schema.sql&#x27;</span>]</span><br><span class="line">      <span class="attr">data-locations:</span> [<span class="string">&#x27;classpath:db/init.sql&#x27;</span>]</span><br><span class="line">  <span class="attr">h2:</span></span><br><span class="line">    <span class="attr">console:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># 开启web访问控制台</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/h2-console</span></span><br></pre></td></tr></table></figure></li>
-<li>启动服务springboot服务后,访问地址 <a href="http://ip:port/h2-console">http://ip:port/h2-console</a>, 使用<code>spring.datasource.url</code>即可使用web控制台访问h2数据库(内存模式)<br><img src="/articles/2023/12/04/h2/embed.png"><br><img src="/articles/2023/12/04/h2/embed-web.png"><h2 id="使用过程的问题"><a href="#使用过程的问题" class="headerlink" title="使用过程的问题"></a>使用过程的问题</h2><h3 id="无法创建数据库"><a href="#无法创建数据库" class="headerlink" title="无法创建数据库"></a>无法创建数据库</h3></li>
-<li>启动tcp模式一定要加上参数 <code>-ifNotExists</code> , 否则首次启动访问数据库, 提示数据库文件不存在<h3 id="mysql语法不兼容"><a href="#mysql语法不兼容" class="headerlink" title="mysql语法不兼容"></a>mysql语法不兼容</h3><h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4></li>
-<li>在应用启动加载<code>schema.sql</code>的初始脚本是mysql语法的, 启动直接就报错了,语法如下<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> TEST;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TEST(</span><br><span class="line">  ID <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY comment <span class="string">&#x27;主键&#x27;</span>, </span><br><span class="line">  NAME <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">not</span> <span class="keyword">null</span> comment <span class="string">&#x27;名字&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
-<li>连接配置<code>jdbc:h2:tcp://localhost/~/DevSoftWare/developer/h2-data/chore;MODE=MySQL</code>, 指定了<code>MODE=Mysql</code>配置, 访问web控制台操作也是出现同样的错误,不兼容mysql语法, 使用的h2版本是<code>h2-1.4.199.jar</code></li>
-</ul>
-<p><img src="/articles/2023/12/04/h2/ddl-error.png"></p>
-<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
-<li>调整支持h2的语法<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> TEST;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> TEST(</span><br><span class="line">  ID <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY comment <span class="string">&#x27;主键&#x27;</span>, </span><br><span class="line">  NAME <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">not</span> <span class="keyword">null</span> comment <span class="string">&#x27;名字&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">COMMENT <span class="keyword">on</span> <span class="keyword">TABLE</span> TEST <span class="keyword">is</span> <span class="string">&#x27;demo&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">on</span> <span class="keyword">COLUMN</span> TEST.ID <span class="keyword">is</span> <span class="string">&#x27;主键&#x27;</span>;</span><br><span class="line">COMMENT <span class="keyword">on</span> <span class="keyword">COLUMN</span> TEST.NAME <span class="keyword">is</span> <span class="string">&#x27;名字&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<blockquote>
-<p>**注意: 表注释还是需要单独声明 <code>COMMENT on TABLE tablename is &#39;&#39;</code></p>
-</blockquote>
-<ul>
-<li>或者升级高版本的h2, 使用 <code>h2-2.1.212.jar</code> 即使连接配置不指定 <code>MODE=Mysql</code>也可以支持mysql语法, 说明是h2的版本问题导致的<br><img src="/articles/2023/12/04/h2/ddl-success.png"></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/09/springboot-mysql/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
-      <meta itemprop="name" content="olsond">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olsond">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/articles/2023/11/09/springboot-mysql/" class="post-title-link" itemprop="url">spring-boot 项目使用mysql,数据的时区问题排查</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-11-09 10:54:28 / 修改时间：16:59:06" itemprop="dateCreated datePublished" datetime="2023-11-09T10:54:28+08:00">2023-11-09</time>
-            </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -300,36 +197,177 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="spring-boot-项目使用mysql-数据的时区问题排查"><a href="#spring-boot-项目使用mysql-数据的时区问题排查" class="headerlink" title="spring-boot 项目使用mysql,数据的时区问题排查"></a>spring-boot 项目使用mysql,数据的时区问题排查</h1><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
-<li>应用: springboot + mysql驱动</li>
-<li>数据库: docker搭建的mysql <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2></li>
-<li>调试应用, 时间类型时区不正确</li>
-<li>保存到数据库后时间显示不正确, 慢了 14 个小时 , 即变成了UTF -6时区(西六区, 美洲中部时间)</li>
-</ul>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><h3 id="检查服务器时区"><a href="#检查服务器时区" class="headerlink" title="检查服务器时区"></a>检查服务器时区</h3><ul>
-<li>输入以下命令<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> date</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -R</span></span><br></pre></td></tr></table></figure></li>
-<li>如果时区不正确不是CST时区, 则需要修改时区, 执行以下命令,选择对应的时区<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tzselect</span></span><br></pre></td></tr></table></figure></li>
-<li>选择完成后执行以下命令<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime</span><br></pre></td></tr></table></figure></li>
-<li>将软件时间写入硬件bioss时间,同步硬件时钟<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo hwclock -w </span><br><span class="line">hwclock -r</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="检查docker-容器设置"><a href="#检查docker-容器设置" class="headerlink" title="检查docker 容器设置."></a>检查docker 容器设置.</h3><ul>
-<li>下面是使用docker启动mysql容器的命令, -V是启动参数, 可以看到引用了宿主机的本地时间文件<code>/etc/localtime</code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">podman run -p 3307:3306 --name mysql  -e MYSQL_ROOT_PASSWORD=Olsond@0920 \</span><br><span class="line">    --restart always \</span><br><span class="line">    -e TZ=Asia/Shanghai \</span><br><span class="line">    -V /etc/localtime:/etc/localtime:ro \</span><br><span class="line">    -v /home/olsond/data/podman_data/mysql/data:/var/lib/mysql \</span><br><span class="line">    -v /home/olsond/data/podman_data/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf \</span><br><span class="line">    -v /home/olsond/data/podman_data/mysql/logs:/mysql/logs \</span><br><span class="line">    -itd mysql:latest \</span><br><span class="line">    --lower_case_table_names=1</span><br><span class="line">    --character-set-server=utf8mb4 \</span><br><span class="line">    --collation-server=utf8mb4_unicode_ci \</span><br></pre></td></tr></table></figure>
-<h3 id="检查-mysql-时区设置"><a href="#检查-mysql-时区设置" class="headerlink" title="检查 mysql 时区设置"></a>检查 mysql 时区设置</h3></li>
-<li>首先确定数据库安装后的时区<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 查看数据库的当前时间</span><br><span class="line"><span class="keyword">select</span> now();</span><br><span class="line">#time_zone说明mysql使用<span class="keyword">system</span>的时区，system_time_zone说明<span class="keyword">system</span>使用CST时区</span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> &quot;%time_zone%&quot;;</span><br></pre></td></tr></table></figure></li>
-<li>设置time_zone: 使用root账号在mysql db中修改时区<code>set global time_zone = &#39;+8:00&#39;; set time_zone = &#39;+8:00&#39;;</code> 或者修改mysql的配置文件<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">default-time-zone = &#x27;+08:00&#x27;</span><br><span class="line">character-set-server = utf8</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意修改配置文件后一定要重启mysql才能生效.</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="应用设置"><a href="#应用设置" class="headerlink" title="应用设置"></a>应用设置</h3><ul>
-<li>首先确定应用连接时带了时区参数<ul>
-<li><code>serverTimeZone=Asia/Shanghai</code></li>
-</ul>
-</li>
-<li>确定java中的时间类型参数格式化是否指定时区<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span>  </span><br><span class="line">  <span class="attr">jackson:</span>  </span><br><span class="line">    <span class="attr">date-format:</span> <span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>  </span><br><span class="line">    <span class="attr">time-zone:</span> <span class="string">&#x27;GMT+&#x27;</span></span><br></pre></td></tr></table></figure></li>
-</ul>
+          <p>从 vue3 + ts + pinia + vite3 迁移到 uniapp</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2024/01/03/develop-uniapp/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/12/04/h2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/articles/2023/12/04/h2/" class="post-title-link" itemprop="url">h2 database</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-04 18:12:17" itemprop="dateCreated datePublished" datetime="2023-12-04T18:12:17+08:00">2023-12-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-12 16:55:35" itemprop="dateModified" datetime="2023-12-12T16:55:35+08:00">2023-12-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>h2数据库的使用</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2023/12/04/h2/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/09/springboot-mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/articles/2023/11/09/springboot-mysql/" class="post-title-link" itemprop="url">spring-boot项目首次使用mysql</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-09 10:54:28" itemprop="dateCreated datePublished" datetime="2023-11-09T10:54:28+08:00">2023-11-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-05 10:13:04" itemprop="dateModified" datetime="2024-01-05T10:13:04+08:00">2024-01-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>spring-boot 项目使用mysql,数据的时区错误问题排查</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2023/11/09/springboot-mysql/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -351,7 +389,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/03/jvm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -362,7 +400,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/11/03/jvm/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/articles/2023/11/03/jvm/" class="post-title-link" itemprop="url">jvm 内存分析</a>
         </h2>
 
         <div class="post-meta">
@@ -371,9 +409,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-03 09:25:00 / 修改时间：09:26:06" itemprop="dateCreated datePublished" datetime="2023-11-03T09:25:00+08:00">2023-11-03</time>
+              <time title="创建时间：2023-11-03 09:25:00" itemprop="dateCreated datePublished" datetime="2023-11-03T09:25:00+08:00">2023-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-12 17:07:43" itemprop="dateModified" datetime="2023-12-12T17:07:43+08:00">2023-12-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Devops/" itemprop="url" rel="index"><span itemprop="name">Devops</span></a>
+                </span>
             </span>
 
           
@@ -387,8 +440,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Linux-java-内存情况排查"><a href="#Linux-java-内存情况排查" class="headerlink" title="Linux java 内存情况排查"></a>Linux java 内存情况排查</h1><h1 id="查看进程的资源使用情况"><a href="#查看进程的资源使用情况" class="headerlink" title="查看进程的资源使用情况"></a>查看进程的资源使用情况</h1><p>top<br>ps aux</p>
-<h2 id="查看指定进程的线程运行情况"><a href="#查看指定进程的线程运行情况" class="headerlink" title="查看指定进程的线程运行情况"></a>查看指定进程的线程运行情况</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">top -Hp &lt;pid&gt;</span><br><span class="line">ps -mp &lt;pid&gt; -o THREAD,tid,time</span><br><span class="line">printf %x n #输出n的16进制</span><br><span class="line"></span><br><span class="line">jstack -l &lt;pid&gt;|grep &lt;tid&gt; -A 30 # pid是进程id,tid是线程id(0x+16进制数) -A 30是输出指定行后30行的数据</span><br><span class="line">jstat -gc &lt;pid&gt; #查看gc情况，各代内存使用大小</span><br><span class="line">jstat -gcutil &lt;pid&gt; #查看gc情况，各代内存占用比%</span><br><span class="line">jmap -heap &lt;pid&gt; #查看jvm的配置以及各区域的使用情况</span><br><span class="line">jmap -histo &lt;pid&gt;#查看堆中的各对象占用情况</span><br><span class="line">jmap -histo:live &lt;pid&gt; #查看队中活跃对象的占用情况</span><br><span class="line">jmap -dump:format=b,file=文件名 &lt;pid&gt; #dump 日志，文件名后缀可以是dump或者jps等</span><br></pre></td></tr></table></figure>
+          <p>jvm 内存 内存情况排查</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2023/11/03/jvm/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -410,7 +470,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/02/replay-attack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -421,7 +481,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/11/02/replay-attack/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/articles/2023/11/02/replay-attack/" class="post-title-link" itemprop="url">http接口请求的重放攻击</a>
         </h2>
 
         <div class="post-meta">
@@ -430,9 +490,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-02 14:38:29 / 修改时间：14:39:55" itemprop="dateCreated datePublished" datetime="2023-11-02T14:38:29+08:00">2023-11-02</time>
+              <time title="创建时间：2023-11-02 14:38:29" itemprop="dateCreated datePublished" datetime="2023-11-02T14:38:29+08:00">2023-11-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-12 17:30:42" itemprop="dateModified" datetime="2023-12-12T17:30:42+08:00">2023-12-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
             </span>
 
           
@@ -446,16 +521,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="接口请求之重放攻击"><a href="#接口请求之重放攻击" class="headerlink" title="接口请求之重放攻击"></a>接口请求之重放攻击</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
-<p><code>API</code>重放攻击（<code>Replay Attacks</code>）又称重播攻击、回放攻击，这种攻击会不断恶意或欺诈性地重复一个有效的<code>API</code>请求。攻击者利用网络监听或者其他方式盗取<code>API</code>请求，进行一定的处理后，再把它重新发给认证服务器，是黑客常用的攻击方式之一。</p>
-</blockquote>
-<h2 id="防止攻击"><a href="#防止攻击" class="headerlink" title="防止攻击"></a>防止攻击</h2><p>提供<code>X-Ca-Timestamp</code>、<code>X-Ca-Nonce</code>（<code>nonce</code>: <code>number used once</code>）两个可选<code>Http Header</code>，客户端调用<code>API</code>时一起使用这两个参数，可以达到防止重放攻击的目的。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ul>
-<li><code>X-Ca-Timestamp</code>：发起请求的时间，可以取自机器的本地实现。当网关收到请求时，会校验这个参数的有效性，误差不超过指定时间（如：<code>15</code>分钟）。</li>
-<li> <code>X-Ca-Nonce</code>：这个是请求的唯一标识，一般使用<code>UUID</code>来标识。网关收到这个参数后会校验这个参数的有效性，同样的值，指定时间（如：<code>15</code>分钟）只能被使用一次。</li>
-<li><code>X-Ca-Timestamp</code>、<code>X-Ca-Nonce</code>和一起辅助参数都加入签名计算，所以请求的任何修改，都会造成签名失败。</li>
-</ul>
-
+          <p>安全漏洞方案-http接口请求的重放攻击</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2023/11/02/replay-attack/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -477,7 +551,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/11/01/git-revert/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -488,7 +562,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/11/01/git-revert/" class="post-title-link" itemprop="url">git-revert</a>
+            <a href="/articles/2023/11/01/git-revert/" class="post-title-link" itemprop="url">git revert</a>
         </h2>
 
         <div class="post-meta">
@@ -497,17 +571,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-01 17:49:02 / 修改时间：17:52:54" itemprop="dateCreated datePublished" datetime="2023-11-01T17:49:02+08:00">2023-11-01</time>
+              <time title="创建时间：2023-11-01 17:49:02" itemprop="dateCreated datePublished" datetime="2023-11-01T17:49:02+08:00">2023-11-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-12 17:02:00" itemprop="dateModified" datetime="2023-12-12T17:02:00+08:00">2023-12-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Devtools/" itemprop="url" rel="index"><span itemprop="name">Devtools</span></a>
+                  <a href="/categories/Devops/" itemprop="url" rel="index"><span itemprop="name">Devops</span></a>
                 </span>
             </span>
 
@@ -522,15 +602,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="git-revert-使用场景"><a href="#git-revert-使用场景" class="headerlink" title="git revert 使用场景"></a>git revert 使用场景</h2><h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><ul>
-<li>A分支、 dev分支</li>
-<li>A分支合并到dev(commit A)后需要回滚 ,使用<code>git revert commitId</code>回滚,并产生一次revert 后的commit记录(commit B)</li>
-<li>A分支继续开发了新内容再次提交到dev, 导致之前commit A的记录再无法合并.<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3></li>
-<li>A分支合并到dev分支, 将commit A的合并请求revert, 产生一次新的revert的commit B记录, 只回滚该次合并的代码记录,不影响其他分支线提交记录</li>
-<li>A分支再次提交, revert之前的commit A的相关代码是在commit B之后的, 新的commit B记录会被认为是最新的时间线, 不会被认为有改动<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3></li>
-<li>分析完很简单, 再次将commit B 再次revert操作再提交commit.<br><img src="/articles/2023/11/01/git-revert/git-revert.png"></li>
-</ul>
-
+          <p>工作备忘记录</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2023/11/01/git-revert/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -552,7 +632,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/10/30/merge-pdf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -609,7 +689,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/10/30/anti/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -620,7 +700,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/10/30/anti/" class="post-title-link" itemprop="url">安全漏洞方案</a>
+            <a href="/articles/2023/10/30/anti/" class="post-title-link" itemprop="url">JavaWeb应用安全漏洞方案</a>
         </h2>
 
         <div class="post-meta">
@@ -637,7 +717,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-01 16:34:48" itemprop="dateModified" datetime="2023-12-01T16:34:48+08:00">2023-12-01</time>
+                <time title="修改时间：2023-12-12 17:20:17" itemprop="dateModified" datetime="2023-12-12T17:20:17+08:00">2023-12-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -660,7 +740,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>工作备忘记录</p>
+          <p>Spring应用安全相关解决方案</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/articles/2023/10/30/anti/">
@@ -690,7 +770,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/10/18/confluence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -771,7 +851,7 @@
     <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/05/23/memos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
       <meta itemprop="name" content="olsond">
       <meta itemprop="description" content="">
     </span>
@@ -799,7 +879,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-06 10:35:25" itemprop="dateModified" datetime="2023-12-06T10:35:25+08:00">2023-12-06</time>
+                <time title="修改时间：2023-12-12 17:35:19" itemprop="dateModified" datetime="2023-12-12T17:35:19+08:00">2023-12-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -826,87 +906,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/articles/2023/05/23/memos/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://olsond.tech/articles/2023/05/10/dev-standard/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_timi.jpeg">
-      <meta itemprop="name" content="olsond">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Olsond">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/articles/2023/05/10/dev-standard/" class="post-title-link" itemprop="url">前后端开发规范</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-05-10 10:54:48" itemprop="dateCreated datePublished" datetime="2023-05-10T10:54:48+08:00">2023-05-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-20 09:47:31" itemprop="dateModified" datetime="2023-10-20T09:47:31+08:00">2023-10-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>前后端开发规范(内部)</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/articles/2023/05/10/dev-standard/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -988,7 +987,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="olsond"
-      src="/images/avatar_timi.jpeg">
+      src="/images/avatar_olsond.jpg">
   <p class="site-author-name" itemprop="name">olsond</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -996,7 +995,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1007,7 +1006,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1042,7 +1041,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
