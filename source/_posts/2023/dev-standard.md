@@ -5,8 +5,8 @@ comments: true
 keywords: java, javascript
 tags: [coding, java, javascript]
 description: 前后端开发规范(内部)
-created: '2023-5-10T16:00:31.050Z'
-modified: '2023-09-25T06:00:01.081Z'
+created: 2023-5-10T16:00:31.050Z
+modified: 2023-09-25T06:00:01.081Z
 ---
 
 # 前后端开发规范指南

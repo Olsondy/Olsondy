@@ -13,7 +13,51 @@ modified: '2023-10-19T14:32:34.081Z'
 # Docker commands
 - command
 ```shell
+# 镜像重命名
 docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）  #Docker image rename
+# 备份镜像
+docker save -o 镜像导出文件(格式为tar压缩文件) 镜像ID或镜像名称[:版本号]
+或
+docker save 镜像ID或镜像名称[:版本号] > 镜像导出文件(格式为tar压缩文件)
+e.g:
+docker save -o $(pwd)/mytomcat.tar newtomcat:v1.0
+或
+docker save newtomcat:v1.0 > $(pwd)/mytomcat.tar
+# 恢复镜像
+docker load -i 镜像导出文件(格式为tar压缩文件)
+或
+docker load < 镜像导出文件(格式为tar压缩文件)
+
+e.g:
+docker load -i $(pwd)/mytomcat.tar 
+或 
+docker load < $(pwd)/mytomcat.tar
+
+#备份容器
+docker export -o 容器导出文件(格式为tar压缩文件) 容器ID或容器名称  
+或
+docker export 容器ID或容器名称 > 容器导出文件(格式为tar压缩文件) 
+
+e.g:
+docker export -o $(pwd)/newtomcat.tar mytomcat
+或
+docker export mytomcat > $(pwd)/newtomcat.tar 
+
+#恢复容器
+docker import 容器导出文件(格式为tar压缩文件) 新镜像名称[:版本号]
+或
+docker import /URL 新镜像名称[:版本号]
+e.g: 
+docker import $(pwd)/newtomcat.tar newtomcat:v1.0
+或
+docker import http://example.com/exampleimage.tgz example/imagerepo
+
+注释：
+$(pwd)是docker支持的获取当前目录路径的方法，与linux的pwd类似
+$(pwd)/newtomcat.tar 表示在当前目录下生成一个newtomcat.tar压缩文件
+
+备注：
+容器可以不启动进行备份操作
 ```
 - docker run params
 ```
@@ -120,23 +164,32 @@ docker run --name teamcity  \
 - **mysql**
 ```bash
 # win
-mkdir -p /home/docker/mysql/mysql_data /home/docker/mysql/logs /home/docker/mysql/conf
+mkdir -p /home/docker/mysql/data /home/docker/mysql/logs /home/docker/mysql/conf
 
 docker run -p 3307:3306 --name mysql --net=rog_net -e MYSQL_ROOT_PASSWORD=Olsond@2022 -v /etc/localtime:/etc/localtime:ro -v /home/docker/mysql/mysq_data:/var/lib/mysql -v /home/docker/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf -v /home/docker/mysql/logs:/logs -d mysql:latest --lower_case_table_names=1
 
 #macos
 mkdir -p /Users/dy/DevSoftWare/developer/docker-data/mysql/mysql_data /Users/dy/DevSoftWare/developer/docker-data/mysql/logs /Users/dy/DevSoftWare/developer/docker-data/mysql/conf && touch /Users/dy/DevSoftWare/developer/docker-data/mysql/conf/my.cnf
 
-$ docker run -p 3307:3306 --name mysql  -e MYSQL_ROOT_PASSWORD=Olsond@0920 -v /etc/localtime:/etc/localtime:ro \
-    -v /Users/dy/DevSoftWare/developer/docker-data/mysql/mysql_data:/var/lib/mysql \
+$ docker run -p 3307:3306 --name mysql --restart always \
+    -e MYSQL_ROOT_PASSWORD=Olsond@0920 \
+    -e TZ=Asia/Shanghai \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v /Users/dy/DevSoftWare/developer/docker-data/mysql/data:/var/lib/mysql \
     -v /Users/dy/DevSoftWare/developer/docker-data/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf \
     -v /Users/dy/DevSoftWare/developer/docker-data/mysql/logs:/mysql/logs \
-    -itd mysql:latest --lower_case_table_names=1
+    -itd mysql:latest \
+    --lower_case_table_names=1 \
+    --character-set-server=utf8mb4 \
+    --collation-server=utf8mb4_unicode_ci \
+    --default-time_zone='+8:00'
 ```
 
 - **redis**
 ```bash
 mkdir -p  /Users/dy/DevSoftWare/developer/docker-data/redis/conf /Users/dy/DevSoftWare/developer/docker-data/redis/data && cd /Users/dy/DevSoftWare/developer/docker-data/redis/conf
+#download redis.conf default
+wget http://download.redis.io/redis-stable/redis.conf
 
 $ docker run --name redis -p 6279:6379 \
     -v /Users/dy/DevSoftWare/developer/docker-data/redis/data:/data \
@@ -245,7 +298,7 @@ docker run --rm -v /home/docker-data/portainer:/data portainer/helper-reset-pass
 ```
 - pgsql
 ```shell
-docker run --name postgres -e POSTGRES_PASSWORD=olsond@dy -p 5432:5432 -v /Users/dy/DevSoftWare/developer/postgres/data:/var/lib/postgresql/data -d postgres
+docker run --name postgres -e POSTGRES_PASSWORD=olsond@dy -p 5433:5432 -v /Users/dy/DevSoftWare/developer/docker-data/postgres/data:/var/lib/postgresql/data -d postgres
 ```
 - onlyoffice
 ```shell
@@ -255,3 +308,17 @@ docker run  -d --name onlyoffice -p 9011:80 \
 # 拷贝出配置文件修改 example 地址
 docker cp /Users/dy/Desktop/default.json containerId:/etc/onlyoffice/documentserver-example/default.json
 ```
+
+- ribbitmq
+```shell
+ podman run -d --name rabbitmq -p 5673:5672 -p 15673:15672 \
+-v /home/olsond/data/podman_data/rabbit:/var/lib/rabbitmq \
+-e RABBITMQ_DEFAULT_VHOST=/chat \
+-e RABBITMQ_DEFAULT_USER=admin \
+-e RABBITMQ_DEFAULT_PASS=123456 \
+rabbitmq:3.8.34-management
+```
+
+
+
+- docker 容器访问mac/windows主机网络可以使用 `host.docker.internal`域名解决问题
