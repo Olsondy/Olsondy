@@ -7,9 +7,9 @@ tags:
   - centos
   - linux
   - devops
-description: grage是个轻量的兼容s3的云存储服务, 可以在配置较低的服务器中运行
-date: 2025-12-26
-updated: 2025-12-26
+description: garage是个轻量的兼容s3的云存储服务, 可以在配置较低的服务器中运行
+date: 2025-12-12T10:20:12.050Z
+updated: 2025-12-26T16:53:01.081Z
 ---
 # Garage的安装和使用
 
@@ -181,4 +181,4 @@ source .awsrc
 
 * **`Default output format [None]:`** 推荐输入 `json`，这样输出会是结构化的 JSON 格式。
 
-配置信息会存储在 `~/.aws/credentials` 和 `~/.aws/config` 文件中
+	配置信息会存储在 `~/.aws/credentials` 和 `~/.aws/config` 文件中
