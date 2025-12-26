@@ -203,12 +203,9 @@ networks:
 
 ## Issue
 -  运行容器提示 "write /run/user/1000/libpod/tmp/events/events.log: no space left on device"
-  
 > 磁盘日志满载 , 删除该日志文件 使用`df- u` 或者 `du -h --max-depth=1`查看用户空间
-
 - setting up Pasta: could not find pasta, the network namespace can't be configured: exec: "pasta": executable file not found in $PATH
->Podman 最新版本的默认无根网络工具 passta, 找不到安装包路径, 则需要安装一下 `sudo dnf instlal passt`
-
+> Podman 最新版本的默认无根网络工具 passta, 找不到安装包路径, 则需要安装一下 `sudo dnf instlal passt`
 - poman.socket 套接字文件是目录的问题, 导致容器管理工具连接不上
 
 ```Bash
