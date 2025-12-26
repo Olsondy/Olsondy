@@ -7,6 +7,7 @@ tags:
   - genai
   - prompt
   - frontend
+  - vuejs
 description: 使用AI智能体IDE开发全栈项目
 date: 2025-12-25T17:20:12.050Z
 updated: 2025-12-26T13:10:03.081Z

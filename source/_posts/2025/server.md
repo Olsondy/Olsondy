@@ -202,6 +202,46 @@ networks:
 ```
 
 ## Issue
-> 运行容器提示 "write /run/user/1000/libpod/tmp/events/events.log: no space left on device"
-  -  磁盘日志满载 , 删除该日志文件 使用`df- u` 或者 `du -h --max-depth=1`查看用户空间
+-  运行容器提示 "write /run/user/1000/libpod/tmp/events/events.log: no space left on device"
+  
+> 磁盘日志满载 , 删除该日志文件 使用`df- u` 或者 `du -h --max-depth=1`查看用户空间
 
+- setting up Pasta: could not find pasta, the network namespace can't be configured: exec: "pasta": executable file not found in $PATH
+>Podman 最新版本的默认无根网络工具 passta, 找不到安装包路径, 则需要安装一下 `sudo dnf instlal passt`
+
+- poman.socket 套接字文件是目录的问题, 导致容器管理工具连接不上
+
+```Bash
+# 停止所有相关服务
+systemctl --user stop podman.socket podman.service
+
+# 确认当前用户ID
+echo "用户ID: $(id -u)"
+
+# 删除异常目录 (替换1000为您的实际用户ID)
+rm -rf /run/user/$(id -u)/podman/podman.sock
+
+# 启用用户级socket服务
+systemctl --user enable podman.socket
+
+# 启动服务
+systemctl --user start podman.socket
+
+# 检查状态
+systemctl --user status podman.socket
+
+ls -l /run/user/$(id -u)/podman/
+
+# 输出 s开头则是文件
+srw-rw----. 1 user user 0 Jul 28 10:00 podman.sock
+
+# 可以选择 重新安装portainer进行连接
+podman run -d \
+  --name portainer \
+  -p 9001:9000 \
+  -p 8000:8000 \
+  -v /run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock \
+  -v ./podman_data/portainer/data:/data \
+  --net network_name \
+  portainer/portainer-ce:latest
+```
