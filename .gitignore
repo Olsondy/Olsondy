@@ -1,0 +1,17 @@
+### IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*/log.path*/
+*/admin/log.path*/
+
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+package-lock.json
+.history/
