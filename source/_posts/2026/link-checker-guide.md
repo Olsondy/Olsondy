@@ -108,8 +108,9 @@ node scripts/creation-lab/check-links-playwright.js --start /creation-lab/prompt
 
 ## 📥 文件下载
 
-- **[check-links.py](/downloads/check-links.py)** - Python 版本
-- **[check-links-playwright.js](/downloads/check-links-playwright.js)** - Playwright 版本
+**[check-links.zip](/downloads/check-links.zip)** - 包含两个版本：
+- `check-links.py` - Python 版本
+- `check-links-playwright.js` - Playwright 版本
 
 ---
 
