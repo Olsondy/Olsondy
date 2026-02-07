@@ -50,17 +50,17 @@ pip install requests
 
 **基本用法 (检查默认地址 http://localhost:4000)**
 ```bash
-python scripts/creation-lab/check-links.py
+python scripts/check-links.py
 ```
 
-**指定起始页面 (例如检查某个 Skill)**
+**指定起始页面 (例如检查某个 页面路径)**
 ```bash
-python scripts/creation-lab/check-links.py --start /creation-lab/skills/s001-controlling-mood-with-words
+python scripts/check-links.py --start /example/page1
 ```
 
 **查看详细输出 (显示每个扫描到的链接)**
 ```bash
-python scripts/creation-lab/check-links.py -v
+python scripts/check-links.py -v
 ```
 
 **完整参数**
@@ -94,8 +94,9 @@ npm install -g playwright
 $env:NODE_PATH="D:\Development\Nodejs\nodejs\node_modules"
 
 # 运行脚本
-node scripts/creation-lab/check-links-playwright.js --start /creation-lab/prompts --max 20 -v
+node scripts/check-links-playwright.js --start /example/page1 --max 20 -v
 ```
+
 
 **参数说明**
 - `--url`: 基础 URL (默认 `http://localhost:4000`)。
