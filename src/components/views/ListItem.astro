@@ -39,7 +39,7 @@ const {
       ? '~ col items-start gap-2'
       : '~ items-center lt-md:(col items-start) gap-2'}
     class="border-b-none! mb-6 mt-2 op-transition! overflow-hidden"
-    href={redirect ? redirect : withBasePath(`/${collectionType}/${postSlug}/`)}
+    href={redirect ? redirect : withBasePath(`/${collectionType === 'blog' ? 'post' : collectionType}/${postSlug}/`)}
     external={redirect ? true : false}
     enableNewTabWarning={redirect ? true : false}
   >
