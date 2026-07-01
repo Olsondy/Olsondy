@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bocayouth.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="uniapp cli 小程序脚手架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小程序开发脚手架 (by uniapp)">
+<meta property="og:url" content="https://bocayouth.me/articles/2024/01/02/develop-mp-weixin/index.html">
+<meta property="og:site_name" content="Olsond">
+<meta property="og:description" content="uniapp cli 小程序脚手架">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-01-02T02:00:31.050Z">
+<meta property="article:modified_time" content="2025-12-25T02:17:01.081Z">
+<meta property="article:author" content="olsond">
+<meta property="article:tag" content="myproject">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="uniapp">
+<meta property="article:tag" content="vite3">
+<meta property="article:tag" content="vue3">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bocayouth.me/articles/2024/01/02/develop-mp-weixin/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>微信小程序开发脚手架 (by uniapp) | Olsond</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Olsond</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">try to be alive</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Olsondy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://bocayouth.me/articles/2024/01/02/develop-mp-weixin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微信小程序开发脚手架 (by uniapp)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-02 10:00:31" itemprop="dateCreated datePublished" datetime="2024-01-02T10:00:31+08:00">2024-01-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-25 10:17:01" itemprop="dateModified" datetime="2025-12-25T10:17:01+08:00">2025-12-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">uniapp cli 小程序脚手架</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="微信小程序开发脚手架-by-uniapp"><a href="#微信小程序开发脚手架-by-uniapp" class="headerlink" title="微信小程序开发脚手架 (by uniapp)"></a>微信小程序开发脚手架 (by uniapp)</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><ul>
+<li>**Nodejs version 20+ **</li>
+</ul>
+<h2 id="Features"><a href="#Features" class="headerlink" title="Features"></a>Features</h2><ul>
+<li><p>📱<a target="_blank" rel="noopener" href="https://uniapp.dcloud.net.cn/">Uniapp Cli</a> - Cross-platform</p>
+</li>
+<li><p>⚡️ <a target="_blank" rel="noopener" href="https://github.com/vuejs/core">Vue 3</a>, <a target="_blank" rel="noopener" href="https://github.com/vitejs/vite">Vite</a>, <a target="_blank" rel="noopener" href="https://pnpm.io/">pnpm</a>, <a target="_blank" rel="noopener" href="https://github.com/evanw/esbuild">ESBuild</a> - born with fastness</p>
+</li>
+<li><p>🗂 <a href="./src/pages">File based routing</a></p>
+</li>
+<li><p>📦 <a href="./src/components">Components auto importing</a></p>
+</li>
+<li><p>📑 <a href="./src/layouts">Layout System</a></p>
+</li>
+<li><p>🎨 <a target="_blank" rel="noopener" href="https://github.com/antfu/unocss">UnoCSS</a> - The instant on-demand atomic CSS engine.</p>
+</li>
+<li><p>😃 Use icons from any icon sets in <a target="_blank" rel="noopener" href="https://github.com/antfu/unocss/tree/main/packages/preset-icons">Pure CSS</a></p>
+</li>
+<li><p>🔥 Use the <a target="_blank" rel="noopener" href="https://github.com/vuejs/rfcs/pull/227">new <code>&lt;script setup&gt;</code> style</a></p>
+</li>
+<li><p>🦾 <a target="_blank" rel="noopener" href="https://www.typescriptlang.org/">TypeScript</a> &amp; <a target="_blank" rel="noopener" href="https://eslint.org/">ESLint</a> - Code Quality</p>
+</li>
+</ul>
+<h2 id="Construct"><a href="#Construct" class="headerlink" title="Construct"></a>Construct</h2><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">| - src</span><br><span class="line">    |- api            // 和后端交互的接口统一定义</span><br><span class="line">    |- compontents    // 组件模块</span><br><span class="line">      |- states       // 公用状态组件</span><br><span class="line">      |- ui           // 公用UI组件</span><br><span class="line">      |- view         // pages页面相关的模块</span><br><span class="line">    |- composables    // 组合函数</span><br><span class="line">    |- http           // 请求封装</span><br><span class="line">    |- layouts        // 布局方案</span><br><span class="line">    |- locale         // 国际化资源</span><br><span class="line">    |- pages          // 页面定义文件</span><br><span class="line">    |- static         // 静态资源</span><br><span class="line">    |- store          // 应用缓存</span><br><span class="line">    |- style          // 自定义样式</span><br><span class="line">    |- uni_modules    // uniapp-plugins</span><br><span class="line">    |- App.vue        // 启动页</span><br><span class="line">    |- main.ts        // 主入口ts</span><br><span class="line">    |- types.ts       // 类型定义</span><br><span class="line">- eslint.config.mjs   // 开发规范</span><br><span class="line">- manifest.config.ts  // uniapp应用运行打包相关配置</span><br><span class="line">- packages.json       // 包管理</span><br><span class="line">- pages.config.ts     // 页面配置文件</span><br><span class="line">- unocss.config.ts    // unocss配置</span><br><span class="line">- vite.config.ts      // vite构建工具配置</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Quick-start"><a href="#Quick-start" class="headerlink" title="Quick start"></a>Quick start</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pnpm</span><br><span class="line"><span class="comment"># not npm for POSIX platforms</span></span><br><span class="line">curl -fsSL https://get.pnpm.io/install.sh | sh -</span><br></pre></td></tr></table></figure>
+<h2 id="Install-Running"><a href="#Install-Running" class="headerlink" title="Install &amp; Running"></a>Install &amp; Running</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># add packages</span></span><br><span class="line">pnpm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># preview h5+</span></span><br><span class="line">pnpm run dev:h5</span><br><span class="line"></span><br><span class="line"><span class="comment"># development weixin</span></span><br><span class="line">pnpm run dev:mp-weixin</span><br><span class="line"></span><br><span class="line"><span class="comment"># production weixin</span></span><br><span class="line">pnpm run build:mp-weixin</span><br></pre></td></tr></table></figure>
+
+<h3 id="Develop"><a href="#Develop" class="headerlink" title="Develop"></a>Develop</h3><blockquote>
+<p>保姆级开发流程</p>
+</blockquote>
+<ul>
+<li>使用webstorm开发工具, 需要安装相关插件, 以提高开发效率. 打开 <code>Settings &gt; Plugins</code>,搜索 <code>Unocss Uniapp-Tool</code></li>
+<li>开始安装依赖 ([Quick start](##Quick start)), 已安装可以忽略此步骤<blockquote>
+<p><strong>当前已设置好小程序主页面框架, 页面主题样式、底部头部导航、背景</strong></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="开始开发一个页面"><a href="#开始开发一个页面" class="headerlink" title="开始开发一个页面"></a>开始开发一个页面</h3><h4 id="页面定义"><a href="#页面定义" class="headerlink" title="页面定义"></a>页面定义</h4><ul>
+<li>在<code>src/pages</code>文件夹中新建.vue文件, 参考下方命名方式</li>
+<li>打开<code>pages.config.ts</code>, 配置好你的页面路径参数, 如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> &#123;</span><br><span class="line">  path: &#x27;pages/qa&#x27;, // 访问路径 (约定好的目录)</span><br><span class="line">  type: &#x27;page&#x27;     // 类型是页面</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="文件命名方式"><a href="#文件命名方式" class="headerlink" title="文件命名方式"></a>文件命名方式</h4><ul>
+<li><code>src/pages</code>文件夹中的文件统一小写开头命名, 跟path相对应, 符合resful风格</li>
+<li><code>component</code>文件夹页面需使用的相关组件, 大写开头驼峰命名方式</li>
+<li><code>.ts</code>后缀,小写开头驼峰命名方式</li>
+</ul>
+<h4 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h4>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--  uni-pages 布局参数 --&gt;</span><br><span class="line">  &lt;route lang=&quot;json&quot;&gt;</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  &lt;/route&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>由pages和route动态执行加载</li>
+<li>页面组件加载顺序: layout -&gt; pages - component</li>
+<li>参考<code>index</code>入口页面的加载顺序<ul>
+<li><code>/layout/main.vue -&gt; /pages/index.vue -&gt; /frame/Entry.vue- &gt;/frame/sidebar/index.vue</code></li>
+</ul>
+</li>
+<li>当前配置了俩种布局 <code>default</code> 和 <code>main</code>, 默认route块为空, 则使用default布局, 布局样例参考 <code>/pages/qa.vue、/pages/access.vue、/pages/index</code></li>
+</ul>
+<blockquote>
+<p>以下是布局中可能使用的代码 (仅参考)</p>
+</blockquote>
+<ul>
+<li>每个页面的可见高度在不同设备不一致, 动态获取可见高度来指定页面的高度</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const windowHeight = ref(uni.getWindowInfo().windowHeight)</span><br><span class="line">&lt;view :style=&quot;&#123;height: `$&#123;windowHeight&#125;px`&#125;&quot;&gt;&lt;/view&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>单文件组件中, 需要统一每个页面的风格(如顶部导航, 滚动样式等), 这里的统一是为了符合小程序和多端的一致性,并不影响实际逻辑代码</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> navBarTop = <span class="title function_">ref</span>(<span class="number">30</span>) <span class="comment">// 内边距高度，单位px</span></span><br><span class="line"><span class="keyword">const</span> navBarHeight = <span class="title function_">ref</span>(<span class="number">70</span>) <span class="comment">// navbar的高度，单位px</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">onMounted</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// #ifdef MP-WEIXIN</span></span><br><span class="line">  <span class="comment">// 编译成小程序需要页面顶部和微信小程序菜单栏对齐</span></span><br><span class="line">  <span class="keyword">const</span> menuButtonInfo = uni.<span class="title function_">getMenuButtonBoundingClientRect</span>()</span><br><span class="line">  navBarTop.<span class="property">value</span> = menuButtonInfo.<span class="property">top</span></span><br><span class="line">  navBarHeight.<span class="property">value</span> = menuButtonInfo.<span class="property">height</span></span><br><span class="line">  <span class="comment">// #endif</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h5 id="202-09-23-更新"><a href="#202-09-23-更新" class="headerlink" title="(202.09.23 更新)"></a>(202.09.23 更新)</h5><blockquote>
+<p>** 注意:<del>通常在小程序里,页面都需要顶部导航组件</del>  现已经封装成组件,根据参数动态显示顶部导航, 使用样例参考 <code>/pages/qa.vue</code></p>
+</blockquote>
+<h4 id="页面跳转常用几种方式"><a href="#页面跳转常用几种方式" class="headerlink" title="页面跳转常用几种方式"></a>页面跳转常用几种方式</h4><ul>
+<li><code>uni.relanuch({ url: &#39;/pages/xxx&#39;})</code> 重新加载一个页面, <del>不可回退</del>(不可回退仅app效果, 小程序无效 )</li>
+<li><code>uni.navigateTo({ url: &#39;/pages/xxx&#39;})</code> 路由到一个新页面, 可以回退</li>
+</ul>
+<h4 id="国际化"><a href="#国际化" class="headerlink" title="国际化"></a>国际化</h4><ul>
+<li>国际化资源目录, 请参考文档中的目录结构介绍</li>
+<li>使用案例</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/*ts中使用*/</span><br><span class="line">import &#123; useI18n &#125; from &#x27;vue-i18n&#x27;</span><br><span class="line">const &#123; t &#125; = useI18n()</span><br><span class="line"></span><br><span class="line">const text: string = t(&#x27;translate.key&#x27;)</span><br><span class="line"></span><br><span class="line">// template中使用</span><br><span class="line">&lt;!--正常使用--&gt;</span><br><span class="line">&lt;label&gt;</span><br><span class="line">&#123;&#123; $t(&#x27;translate.key&#x27;) &#125;&#125;</span><br><span class="line">&lt;/label&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 带参数的用法 --&gt;</span><br><span class="line">&lt;label&gt;</span><br><span class="line">&#123;&#123; $t(&#x27;translate.key&#x27;,[params...]) &#125;&#125;</span><br><span class="line">&lt;/label&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点:"></a>注意点:</h3><ul>
+<li><p>组件生命周期函数, 参考uniapp文档: <a target="_blank" rel="noopener" href="https://zh.uniapp.dcloud.io/tutorial/page.html#vue3-lifecycle-flow">vue3页面及组件生命周期</a></p>
+</li>
+<li><p>使用图标时, 如需动态加载图标库, 需要先定义. 参考 <code>unocss-icon.ts</code>,  see: <a target="_blank" rel="noopener" href="https://github.com/unocss/unocss/issues/829">https://github.com/unocss/unocss/issues/829</a></p>
+</li>
+<li><p>默认 font-size 为 16px，即 1rem &#x3D; 16px，也就是说 Unocss 的1单位换算成 px 就是 4px , e.g: <code>[w-1] = 0.25rem = 4px</code></p>
+</li>
+<li><p>setup 语法糖的问题, @vue&#x2F;runtime-core 和 vue的区别</p>
+<ul>
+<li>俩者import的写法不一一样, runtime:<code>import { ref } from &#39;vue@runtime-core&#39;</code>  vue: <code>import { ref } from &#39;vue&#39;</code></li>
+<li>runtime-core适用开发一个自定义的 Vue 生态工具或库, 否则适用vue即可</li>
+</ul>
+</li>
+<li><p>背景图不支持本地图片, 使用网络图片, 用云存储或者自建静态服务器cdn</p>
+</li>
+</ul>
+<h3 id="样式兼容性"><a href="#样式兼容性" class="headerlink" title="样式兼容性"></a>样式兼容性</h3><ul>
+<li>小程序不能使用伪类的样式, 此问题是小程序的和uniapp 无关</li>
+<li>设置小程序局部样式穿透, 原始情况是父子组件样式是隔离的, 每个组件只受自己的wxss文件的影响, 设置穿透后, 父组件指定样式可以影响子组件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 允许样式穿透 --&gt;</span><br><span class="line">&lt;script lang=&quot;ts&quot;&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  options: &#123; styleIsolation: &#x27;shared&#x27; &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>不管是vue事件还是自定义事件请尽量不要设置在子组件名字标签上,</li>
+</ul>
+<h2 id="开发参考"><a href="#开发参考" class="headerlink" title="开发参考"></a>开发参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://wot-design-uni.cn/">基于京东的ui库:wot-ui</a></li>
+<li><a target="_blank" rel="noopener" href="https://unocss.dev/interactive/">unocss规则参考</a></li>
+<li><a target="_blank" rel="noopener" href="https://unocss.antfu.me/play/">unocss运行演示</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailwindcss.com/">tailwind样式参考库</a></li>
+<li><a target="_blank" rel="noopener" href="https://icones.js.org/collection/carbon?s=home&icon=carbon:home">字体图标库</a></li>
+<li><a target="_blank" rel="noopener" href="https://regex101.com/">正则库</a></li>
+<li><a target="_blank" rel="noopener" href="https://youtrack.jetbrains.com/issue/WEB-67807/Vue-Language-Service-always-terminated-even-after-restarting-it">webstorm插件不生效的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web">Web开发手册</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/uniapp/" rel="tag"># uniapp</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+              <a href="/tags/vue3/" rel="tag"># vue3</a>
+              <a href="/tags/vite3/" rel="tag"># vite3</a>
+              <a href="/tags/myproject/" rel="tag"># myproject</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2024/01/02/develop-uniapp/" rel="prev" title="使用vue3+vite+ts开发uniapp">
+      <i class="fa fa-chevron-left"></i> 使用vue3+vite+ts开发uniapp
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2024/04/03/merge-pdf/" rel="next" title="使用itext处理PDF文件">
+      使用itext处理PDF文件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E8%84%9A%E6%89%8B%E6%9E%B6-by-uniapp"><span class="nav-number">1.</span> <span class="nav-text">微信小程序开发脚手架 (by uniapp)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Intro"><span class="nav-number">1.1.</span> <span class="nav-text">Intro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Features"><span class="nav-number">1.2.</span> <span class="nav-text">Features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Construct"><span class="nav-number">1.3.</span> <span class="nav-text">Construct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-start"><span class="nav-number">1.4.</span> <span class="nav-text">Quick start</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Running"><span class="nav-number">1.5.</span> <span class="nav-text">Install &amp; Running</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Develop"><span class="nav-number">1.5.1.</span> <span class="nav-text">Develop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.5.2.</span> <span class="nav-text">开始开发一个页面</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%AE%9A%E4%B9%89"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">页面定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">文件命名方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%83%E5%B1%80"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">布局</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#202-09-23-%E6%9B%B4%E6%96%B0"><span class="nav-number">1.5.2.3.1.</span> <span class="nav-text">(202.09.23 更新)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC%E5%B8%B8%E7%94%A8%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">页面跳转常用几种方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BD%E9%99%85%E5%8C%96"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">国际化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">1.5.3.</span> <span class="nav-text">注意点:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B7%E5%BC%8F%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="nav-number">1.5.4.</span> <span class="nav-text">样式兼容性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%8F%82%E8%80%83"><span class="nav-number">1.6.</span> <span class="nav-text">开发参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="olsond"
+      src="/images/avatar_olsond.jpg">
+  <p class="site-author-name" itemprop="name">olsond</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Olsondy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Olsondy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/javady" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;javady" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">olsond</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

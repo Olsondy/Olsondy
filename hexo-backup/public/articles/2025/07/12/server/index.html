@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bocayouth.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="如何使用podman手动搭建一个应用启动环境, 从服务器购买到初始化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务器从0-1初始化及环境搭建">
+<meta property="og:url" content="https://bocayouth.me/articles/2025/07/12/server/index.html">
+<meta property="og:site_name" content="Olsond">
+<meta property="og:description" content="如何使用podman手动搭建一个应用启动环境, 从服务器购买到初始化">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-07-12T02:20:12.050Z">
+<meta property="article:modified_time" content="2025-12-26T05:53:01.081Z">
+<meta property="article:author" content="olsond">
+<meta property="article:tag" content="centos">
+<meta property="article:tag" content="devops">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bocayouth.me/articles/2025/07/12/server/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>服务器从0-1初始化及环境搭建 | Olsond</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Olsond</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">try to be alive</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Olsondy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://bocayouth.me/articles/2025/07/12/server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          服务器从0-1初始化及环境搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-12 10:20:12" itemprop="dateCreated datePublished" datetime="2025-07-12T10:20:12+08:00">2025-07-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-26 13:53:01" itemprop="dateModified" datetime="2025-12-26T13:53:01+08:00">2025-12-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deveops/" itemprop="url" rel="index"><span itemprop="name">Deveops</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">如何使用podman手动搭建一个应用启动环境, 从服务器购买到初始化</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Server-initialization"><a href="#Server-initialization" class="headerlink" title="Server initialization"></a>Server initialization</h1><h2 id="cloud"><a href="#cloud" class="headerlink" title="cloud"></a>cloud</h2><ul>
+<li>cloud server OS Centos 8x</li>
+<li>update server ssh port</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add a row of custom ports (e.g Port 9576)</span></span><br><span class="line">vi /etc/ssh/sshd_config</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Port 25073</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ClientAliveInterval 60     <span class="comment"># 服务器每 60 秒检测一次客户端</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ClientAliveCountMax 3      <span class="comment"># 允许 3 次检测无响应</span></span></span><br><span class="line">sudo service sshd restart</span><br><span class="line">sudo systemctl restart sshd</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add a row of custom ListenStream (e.g ListenStream=9576)</span></span><br><span class="line">vi /etc/systemd/system/sockets.target.wants/ssh.socket</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart ssh.socket</span><br></pre></td></tr></table></figure>
+<ul>
+<li>add user and auth</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser yourusername</span><br><span class="line">sudo passwd yourusername</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">usage Ubuntu</span></span><br><span class="line">sudo usermod -aG sudo yourusername</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">update auth Debain默认没有，Ubuntu自身应该是已经有安装的</span></span><br><span class="line">apt update &amp;&amp; apt install sudo  #</span><br><span class="line"></span><br><span class="line">visudo</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add row</span> </span><br><span class="line">yourusername ALL=(ALL) NOPASSWD: ALL</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">successfuly !!!</span></span><br><span class="line">ssh yourusername@xxx.xx.xx.xx -p port</span><br></pre></td></tr></table></figure>
+
+<h2 id="install-app-container"><a href="#install-app-container" class="headerlink" title="install app container"></a>install app container</h2><ul>
+<li>create podman container workspace data dir</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/olsond/podman_data &amp;&amp;  cd /home/olsond/podman_data</span><br></pre></td></tr></table></figure>
+<ul>
+<li>podman &amp; podman compose</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">CentOS</span></span><br><span class="line">sudo dnf install podman podman-compose</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Ubuntu(由于ubuntu系统过于追求更新, 在这个操作系统上 这俩个版本会不一致,需要手动去确认版本)</span></span><br><span class="line">sudo apt-get update &amp;&amp; sudo apt-get install podman podman-compose</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">install socket</span></span><br><span class="line">systemctl --user enable --now podman.socket</span><br><span class="line">systemctl --user start podman.socket</span><br><span class="line">systemctl --user status podman.socket</span><br><span class="line">ls -l /run/user/$(id -u)/podman/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">config registries</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">root</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> vim /etc/containers/registries.conf</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">rootless</span></span><br><span class="line">vim ~/.config/containers/registries.conf</span><br><span class="line">chmod 644 ~/.config/containers/registries.conf  # 设置权限</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">add registries</span></span><br><span class="line">unqualified-search-registries = [&quot;docker.io&quot;]</span><br><span class="line">[[registry]]</span><br><span class="line">prefix = &quot;docker.io&quot;</span><br><span class="line">location = &quot;docker.1ms.run&quot;</span><br><span class="line">[[registry]]</span><br><span class="line">prefix = &quot;docker.io&quot;</span><br><span class="line">location = &quot;docker-0.unsee.tech&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">setting storage</span></span><br><span class="line">mkdir -p ~/.config/containers </span><br><span class="line">mkdir -p ~/.local/run/containers/storage</span><br><span class="line">vim ~/.config/containers/storage.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add storage <span class="built_in">dir</span></span></span><br><span class="line">[storage]</span><br><span class="line">driver = &quot;overlay&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">runroot = <span class="string">&quot;/home/<span class="variable">$USER</span>/.local/run/containers/storage&quot;</span></span></span><br><span class="line">graphroot = &quot;/home/$USER/.local/share/containers/storage&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">successcful</span> </span><br><span class="line">podman info</span><br></pre></td></tr></table></figure>
+<ul>
+<li>nginx workspece setting</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">dir</span> initialize</span></span><br><span class="line">mkdir -p /home/olsond/podman_data/postgresql</span><br><span class="line">mkdir -p /home/olsond/podman_data/nginx &amp;&amp; cd /home/olsond/podman_data/nginx</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">config initialize <span class="keyword">for</span> demo nginx</span></span><br><span class="line">podman run --name nginx -p 18080:80 -d nginx:latest</span><br><span class="line">podman cp nginx:/etc/nginx/nginx.conf /home/olsond/podman_data/nginx/</span><br><span class="line">podman cp nginx:/etc/nginx/conf.d /home/olsond/podman_data/nginx/conf.d</span><br><span class="line">podman cp nginx:/usr/share/nginx/html /home/olsond/podman_data/nginx/html</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">remove demo nginx</span></span><br><span class="line">podman stop nginx</span><br><span class="line">podman rm nginx</span><br></pre></td></tr></table></figure>
+<ul>
+<li>portainer workspece setting</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/podman_data/portainer/data</span><br></pre></td></tr></table></figure>
+<ul>
+<li>podman compose command</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">podman-compose -f xxx.yml up -d</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">shutdown</span></span><br><span class="line">podman-compose -f xxx.yml down</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">condition</span></span><br><span class="line">podman-compose -f compose.yml up -d [服务名]</span><br><span class="line">podman-compose -f compose.yml down [服务名]</span><br><span class="line"></span><br><span class="line">podman container -a</span><br><span class="line"></span><br><span class="line">podman image prune -a</span><br><span class="line"></span><br><span class="line">podman system prune -a</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>crate user id script</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; .env</span></span><br><span class="line"><span class="string"># 自动生成用户权限设置</span></span><br><span class="line"><span class="string">CURRENT_UID=$(id -u)</span></span><br><span class="line"><span class="string">CURRENT_GID=$(id -g)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 应用特定设置</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>podman-compose.yml demo</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="comment"># 数据库服务（PostgreSQL）</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:13</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">postgresql</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5432:5432&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">POSTGRES_USER:</span> <span class="string">koalauser</span></span><br><span class="line">      <span class="attr">POSTGRES_PASSWORD:</span> <span class="string">koalapwd@2025</span></span><br><span class="line">      <span class="attr">POSTGRES_DB:</span> <span class="string">koala_words</span></span><br><span class="line">      <span class="attr">LANG:</span> <span class="string">C.UTF-8</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./postgresql/data:/var/lib/postgresql/data</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD-SHELL&quot;</span>, <span class="string">&quot;pg_isready -U myuser -d mydb&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">5s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">5</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">network_name</span></span><br><span class="line">   <span class="comment"># Nginx服务</span></span><br><span class="line">  <span class="comment">#nginx:</span></span><br><span class="line">  <span class="comment">#  image: nginx:latest</span></span><br><span class="line">  <span class="comment">#  container_name: nginx</span></span><br><span class="line">  <span class="comment">#  ports:</span></span><br><span class="line">  <span class="comment">#    - &quot;8080:80&quot;     # HTTP端口</span></span><br><span class="line">  <span class="comment">#    - &quot;8443:443&quot;   # HTTPS端口</span></span><br><span class="line">  <span class="comment">#  volumes:</span></span><br><span class="line">  <span class="comment">#    # 挂载自定义配置</span></span><br><span class="line">  <span class="comment">#    - ./nginx/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">  <span class="comment">#    - ./nginx/ssl:/etc/nginx/ssl</span></span><br><span class="line">  <span class="comment">#    - ./nginx/conf.d:/etc/nginx/conf.d</span></span><br><span class="line">  <span class="comment">#    - ./nginx/html:/usr/share/nginx/html</span></span><br><span class="line">  <span class="comment">#   - ./nginx/log:/var/log/nginx</span></span><br><span class="line">  <span class="comment">#  restart: always  # 自动重启</span></span><br><span class="line">  <span class="comment">#  networks: </span></span><br><span class="line">  <span class="comment">#    - koala_test</span></span><br><span class="line">  <span class="attr">portainer_ce:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">portainer/portainer-ce:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">portainer</span></span><br><span class="line">    <span class="attr">ports:</span> </span><br><span class="line">      <span class="comment"># 注意官方教程中使用9443端口是用于https的,没有证书的无法启用</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;9001:9000&quot;</span> <span class="comment">#http ui port</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;8000:8000&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">       <span class="comment"># 挂载自定义配置</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./podman_data/portainer/data:/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/run/user/$&#123;CURRENT_UID&#125;/podman/podman.sock:/var/run/docker.sock</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>  <span class="comment"># 自动重启</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">koala_test</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">koala_test:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">network_name</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Issue"><a href="#Issue" class="headerlink" title="Issue"></a>Issue</h2><ul>
+<li>运行容器提示 “write &#x2F;run&#x2F;user&#x2F;1000&#x2F;libpod&#x2F;tmp&#x2F;events&#x2F;events.log: no space left on device”<blockquote>
+<p>磁盘日志满载 , 删除该日志文件 使用<code>df- u</code> 或者 <code>du -h --max-depth=1</code>查看用户空间</p>
+</blockquote>
+</li>
+<li>setting up Pasta: could not find pasta, the network namespace can’t be configured: exec: “pasta”: executable file not found in $PATH<blockquote>
+<p>Podman 最新版本的默认无根网络工具 passta, 找不到安装包路径, 则需要安装一下 <code>sudo dnf instlal passt</code></p>
+</blockquote>
+</li>
+<li>poman.socket 套接字文件是目录的问题, 导致容器管理工具连接不上</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止所有相关服务</span></span><br><span class="line">systemctl --user stop podman.socket podman.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确认当前用户ID</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;用户ID: <span class="subst">$(id -u)</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除异常目录 (替换1000为您的实际用户ID)</span></span><br><span class="line"><span class="built_in">rm</span> -rf /run/user/$(<span class="built_in">id</span> -u)/podman/podman.sock</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用用户级socket服务</span></span><br><span class="line">systemctl --user <span class="built_in">enable</span> podman.socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">systemctl --user start podman.socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查状态</span></span><br><span class="line">systemctl --user status podman.socket</span><br><span class="line"></span><br><span class="line"><span class="built_in">ls</span> -l /run/user/$(<span class="built_in">id</span> -u)/podman/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出 s开头则是文件</span></span><br><span class="line">srw-rw----. 1 user user 0 Jul 28 10:00 podman.sock</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以选择 重新安装portainer进行连接</span></span><br><span class="line">podman run -d \</span><br><span class="line">  --name portainer \</span><br><span class="line">  -p 9001:9000 \</span><br><span class="line">  -p 8000:8000 \</span><br><span class="line">  -v /run/user/$(<span class="built_in">id</span> -u)/podman/podman.sock:/var/run/docker.sock \</span><br><span class="line">  -v ./podman_data/portainer/data:/data \</span><br><span class="line">  --net network_name \</span><br><span class="line">  portainer/portainer-ce:latest</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/centos/" rel="tag"># centos</a>
+              <a href="/tags/devops/" rel="tag"># devops</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2025/05/12/nginx/" rel="prev" title="CentOS系统编译安装nginx">
+      <i class="fa fa-chevron-left"></i> CentOS系统编译安装nginx
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2025/12/12/garage/" rel="next" title="搭建兼容S3的云存储- Garage的安装和使用">
+      搭建兼容S3的云存储- Garage的安装和使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Server-initialization"><span class="nav-number">1.</span> <span class="nav-text">Server initialization</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cloud"><span class="nav-number">1.1.</span> <span class="nav-text">cloud</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#install-app-container"><span class="nav-number">1.2.</span> <span class="nav-text">install app container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Issue"><span class="nav-number">1.3.</span> <span class="nav-text">Issue</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="olsond"
+      src="/images/avatar_olsond.jpg">
+  <p class="site-author-name" itemprop="name">olsond</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Olsondy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Olsondy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/javady" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;javady" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">olsond</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

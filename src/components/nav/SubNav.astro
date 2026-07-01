@@ -1,0 +1,49 @@
+---
+import { UI } from '~/config'
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/'
+const { blogCategories = [] } = UI
+---
+
+{
+  blogCategories.length > 0 && (
+    <div class="prose m-auto mb-8">
+      <div class="mb-0 flex flex-col gap-1 sm:flex-row sm:gap-4 flex-wrap text-3xl font-bold">
+        {blogCategories.map((category) => {
+          const catPath = category.path.replace(/\/$/, '') || '/'
+          const isActive = currentPath === catPath
+          return (
+            <a
+              href={category.path}
+              class={`nav-link !border-none ${isActive ? 'active' : 'inactive'}`}
+            >
+              {category.title}
+            </a>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .nav-link {
+    border: none !important;
+    border-bottom: none !important;
+    font-weight: 400 !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease;
+  }
+  
+  .active {
+    opacity: 1 !important;
+  }
+
+  .inactive {
+    opacity: 0.3 !important;
+  }
+
+  .inactive:hover {
+    opacity: 0.6 !important;
+  }
+</style>

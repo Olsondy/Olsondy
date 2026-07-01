@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bocayouth.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="从 vue3 + ts + pinia + vite3 迁移到 uniapp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用vue3+vite+ts开发uniapp">
+<meta property="og:url" content="https://bocayouth.me/articles/2024/01/02/develop-uniapp/index.html">
+<meta property="og:site_name" content="Olsond">
+<meta property="og:description" content="从 vue3 + ts + pinia + vite3 迁移到 uniapp">
+<meta property="og:locale">
+<meta property="og:image" content="https://bocayouth.me/articles/2024/01/02/develop-uniapp/stranger-uni-01.png">
+<meta property="og:image" content="https://bocayouth.me/articles/2024/01/02/develop-uniapp/stranger-uni-02.png">
+<meta property="article:published_time" content="2024-01-02T02:00:31.050Z">
+<meta property="article:modified_time" content="2025-01-10T02:17:01.081Z">
+<meta property="article:author" content="olsond">
+<meta property="article:tag" content="myproject">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="uniapp">
+<meta property="article:tag" content="vite3">
+<meta property="article:tag" content="vue3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bocayouth.me/articles/2024/01/02/develop-uniapp/stranger-uni-01.png">
+
+<link rel="canonical" href="https://bocayouth.me/articles/2024/01/02/develop-uniapp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>使用vue3+vite+ts开发uniapp | Olsond</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Olsond</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">try to be alive</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Olsondy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://bocayouth.me/articles/2024/01/02/develop-uniapp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用vue3+vite+ts开发uniapp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-02 10:00:31" itemprop="dateCreated datePublished" datetime="2024-01-02T10:00:31+08:00">2024-01-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-01-10 10:17:01" itemprop="dateModified" datetime="2025-01-10T10:17:01+08:00">2025-01-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">从 vue3 + ts + pinia + vite3 迁移到 uniapp</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="使用uniapp开发IOS-技术栈-vue3-ts"><a href="#使用uniapp开发IOS-技术栈-vue3-ts" class="headerlink" title="使用uniapp开发IOS,  技术栈 vue3 + ts"></a>使用uniapp开发IOS,  技术栈 vue3 + ts</h1><h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><ul>
+<li>使用官方<code>uni-perset-vue-vite-ts</code>脚手架或者<code>uni-vitesse</code>脚手架</li>
+<li>使用node LTS 版本 16.20.0之后的版本</li>
+<li>使用<code>vs-code</code>开发 下载相应扩展插件, <code>uni-help</code>、<code>uni-create-view</code></li>
+<li>依赖建议使用pnpm安装, 安装pnpm <code>npm install pnpm -g</code>, 后使用<code>pnpm install</code>命令</li>
+<li>在<code>package.json</code>中添加项目所需的依赖</li>
+<li>配置<code>vite.config.js</code>、<code>tsconfig.json</code> </li>
+<li>添加 store框架 <code>pinia</code> 相应的代码模块</li>
+<li>添加 api 请求框架<code>axios</code>相应的代码模块</li>
+<li>使用布局组件<code>@uni-helper/vite-plugin-uni-pages</code>, <code>@uni-helper/vite-plugin-uni-layouts</code>, 好处是不需要改造原始vue sfc组件的布局, 使用插槽模式嵌入已有组件作为页面</li>
+<li>添加tailwindcss样式库, 小程序或app适配库, rem转换库 <code>@uni-helper/vite-plugin-uni-tailwind</code>、<code>tailwindcss-rem2px-preset</code></li>
+</ul>
+<h2 id="项目整体结构"><a href="#项目整体结构" class="headerlink" title="项目整体结构"></a>项目整体结构</h2><p><img src="/articles/2024/01/02/develop-uniapp/stranger-uni-01.png"><br><img src="/articles/2024/01/02/develop-uniapp/stranger-uni-02.png"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="开发环境问题"><a href="#开发环境问题" class="headerlink" title="开发环境问题"></a>开发环境问题</h3><ul>
+<li>pinia 运行出错 <code>xxxxx pinia export named &#39;hasInjectionContext&#39;</code><blockquote>
+<p>请使用固定版本2.0.x的 pinia版本 , 不要使用 <code>^2.0.x</code>开头,  目前 uniapp官方人员排查问题未知,  但web端环境则不会</p>
+</blockquote>
+</li>
+<li>vs-code <code>import xxx</code>  依赖编译出错<blockquote>
+<p>使用 <code>command + shift + p</code> 打开配置使用设置, 输入typescript, 选择第二项,使用工作空间的typescript版本,  如果没有提示volar 工具, 则需要下载 <code>TypeScript Vue plugin(Volar)</code> 插件或者全家桶<code>Vue Volar extension Pack</code></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="配置问题"><a href="#配置问题" class="headerlink" title="配置问题"></a>配置问题</h3><ul>
+<li>启动出现 <code># [plugin:vite:vue] At least one &lt;template&gt; or &lt;script&gt; is required in a single file component.</code><blockquote>
+<p>vite.config.js中 去掉vue(), 这个是编译vuejs使用的</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="开发问题"><a href="#开发问题" class="headerlink" title="开发问题"></a>开发问题</h3><h4 id="编译错误"><a href="#编译错误" class="headerlink" title="编译错误"></a>编译错误</h4><ul>
+<li>提示<code>globalThis</code> 错误, 检查引入的组件是否有不兼容的写法, 使用排除法进行排查</li>
+<li>svg不支持在ios平台, 可将svg替换成font字体图标</li>
+<li>window对象不支持</li>
+<li><code>uniapp</code>不支持部分Vue3的Transition过渡动画, 会出现类似错误 <code>TypeError: undefined is not an object (evaluating &#39;i.classList.add&#39;) __ERROR</code></li>
+</ul>
+<h4 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h4><ul>
+<li>注意组件加载和接口调用顺序, 如<code>onShow、onLoad 、onMounted</code>等, 优先级高的接口要优先调用, 例如获取用户接口, 判断token有效接口等</li>
+</ul>
+<h4 id="真机调试"><a href="#真机调试" class="headerlink" title="真机调试"></a>真机调试</h4><h5 id="样式不兼容"><a href="#样式不兼容" class="headerlink" title="样式不兼容"></a>样式不兼容</h5><ul>
+<li>tailwindcss 不生效, 分辨率单位适配问题</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vite.config.js</span></span><br><span class="line"><span class="keyword">import</span> alias <span class="keyword">from</span> <span class="string">&quot;@rollup/plugin-alias&quot;</span></span><br><span class="line"><span class="keyword">import</span> uni <span class="keyword">from</span> <span class="string">&#x27;@dcloudio/vite-plugin-uni&#x27;</span></span><br><span class="line"><span class="keyword">import</span> tailwindcss <span class="keyword">from</span> <span class="string">&#x27;tailwindcss&#x27;</span></span><br><span class="line"><span class="keyword">import</span> uniTailwind <span class="keyword">from</span> <span class="string">&#x27;@uni-helper/vite-plugin-uni-tailwind&#x27;</span> <span class="comment">// 适配小程序和app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">css</span>: &#123;</span><br><span class="line">    <span class="attr">postcss</span>: &#123;</span><br><span class="line">      <span class="attr">plugins</span>: [</span><br><span class="line">        <span class="title function_">tailwindcss</span>(),</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="title function_">alias</span>(),</span><br><span class="line">    <span class="title function_">uni</span>(),</span><br><span class="line">    <span class="title function_">uniTailwind</span>()</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>page页面无高度问题</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**在App.vue 添加全局样式**/</span></span><br><span class="line">uni-<span class="attribute">page</span>-head &#123;</span><br><span class="line">	<span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br><span class="line">uni-<span class="attribute">page</span>, uni-<span class="attribute">page</span>-<span class="selector-tag">body</span> &#123;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span></span><br><span class="line">&#125;</span><br><span class="line">::-webkit-scrollbar &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用原生html标签导致 uni-button和tailwindcss样式冲突</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 针对重名html标签, 首先自定义类样式, 然后在需要重载的button组件页面添加该样式, 注意需要使用scoped 作用域</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="meta">!important</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: transparent <span class="meta">!important</span>;</span><br><span class="line">  <span class="attribute">border</span>: none <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="组件不兼容"><a href="#组件不兼容" class="headerlink" title="组件不兼容"></a>组件不兼容</h5><ul>
+<li>同级兄弟组件传递 可以使用 <code>uni.$on</code>和 <code>uni.$emit</code>进行传递事件数据, 在 <code>onMounted</code>挂载事件, 在<code>onUnMounted</code>函数中使用 <code>uni.$off</code>卸载事件, 否则会多次执行</li>
+<li><code>textarea</code>内置组件在IOS真机下, 绑定了value值之后在原生虚拟键盘下, 快速打字会导致输入框失焦, 具体操作是: 输入法的候选词和键盘同时按下有90%概率触发,  可能是组件与IOS不兼容的bug, <code>input</code>组件无此问题</li>
+</ul>
+<h5 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h5><ul>
+<li>去掉<code>uniapp</code> 顶部样式和键盘工具条样式、无回弹效果 设置<code>pages.json</code>中的<code>app-plus</code>属性</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  path<span class="punctuation">:</span> &#x27;pages/index&#x27;<span class="punctuation">,</span></span><br><span class="line">  type<span class="punctuation">:</span> &#x27;home&#x27;<span class="punctuation">,</span></span><br><span class="line">  style<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">	navigationBarBackgroundColor<span class="punctuation">:</span> &#x27;#F8F8F8&#x27;<span class="punctuation">,</span></span><br><span class="line">	navigationStyle<span class="punctuation">:</span> &#x27;custom&#x27;<span class="punctuation">,</span> <span class="comment">// 使用自定义导航栏，系统会关闭默认的原生导航栏</span></span><br><span class="line">	&#x27;app-plus&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">	  &#x27;bounce&#x27;<span class="punctuation">:</span> &#x27;none&#x27;<span class="punctuation">,</span></span><br><span class="line">	  &#x27;softinputMode&#x27;<span class="punctuation">:</span> &#x27;adjustResize&#x27;<span class="punctuation">,</span> <span class="comment">// 自适应软键盘弹起页面高度</span></span><br><span class="line">	  &#x27;softinputNavBar&#x27;<span class="punctuation">:</span> <span class="string">&quot;none&quot;</span></span><br><span class="line">	<span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>首屏页展示: 在pages中设置第一个页面的配置信息,  即首屏展示第一个页面</li>
+<li>在设置图标中, 并不一定需要在button中设置插槽放入图标, 可以直接将图标放入div中, 设置<code>margin: 10px</code>即可</li>
+<li><code>scroll-view</code>的使用:  内容滚动到底部,  在dom加载后计算内容div容器的高度, 该场景适合内容是动态添加的模式</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup lang=<span class="string">&quot;ts&quot;</span>&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> scrollHeight = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> scrollTop = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 滚动到底部</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sorollButtom</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> contnetContaniner = uni.<span class="title function_">createSelectorQuery</span>().<span class="title function_">select</span>(<span class="string">&#x27;.message-content&#x27;</span>) <span class="comment">//根据组件id获取</span></span><br><span class="line">  contnetContaniner</span><br><span class="line">    .<span class="title function_">boundingClientRect</span>(<span class="function">(<span class="params">data: any | <span class="literal">null</span></span>) =&gt;</span> &#123;</span><br><span class="line">      scrollTop.<span class="property">value</span> = data.<span class="property">height</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_">exec</span>()</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>websocket.send</code>方法回调函数不兼容问题(h5, ios) , 在ios平台下, 如果后端服务宕机, 从<code>uni.connectWebsocket</code>创建的实例中使用<code>send</code>发送消息失败无法返回<code>errCode</code>编码且发送成功和失败回调函数都会执行, 先执行的<code>fail</code>后执行的<code>success</code>,  可以尝试如下解决方案,定义变量接失败函数的返回值, 再将处理后的结果返回到调用端</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">sendMessage</span> = (<span class="params">wsKey: <span class="built_in">String</span>, data: string, onComplete: WebSocketMegFunc</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> ws = wsMap.<span class="title function_">get</span>(wsKey)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;get websocket instance&#x27;</span>, ws)</span><br><span class="line">  <span class="comment">// 设置结果标识</span></span><br><span class="line">  <span class="keyword">let</span> sendFlag = <span class="literal">true</span></span><br><span class="line">  <span class="keyword">if</span> (ws) &#123;</span><br><span class="line">    ws.<span class="property">socket</span>.<span class="title function_">send</span>(&#123;</span><br><span class="line">      data,</span><br><span class="line">      <span class="title function_">fail</span>(<span class="params">arg: any</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;消息发送失败&#x27;</span>)</span><br><span class="line">        sendFlag = <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">if</span> (onComplete) &#123;</span><br><span class="line">      <span class="title function_">onComplete</span>(&#123;<span class="attr">success</span>: sendFlag&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>websocket 在ios app中服务端关闭连接在创建时 不会触发onClose事件 但是会触发onError事件, 可在onError 事件中进行重试</li>
+<li>真机App冷关闭(完全退出)后, App.vue 的<code>onHide</code> 函数中只会执行首行的代码逻辑, 具体原因未知, 热关闭(后台)不会出现该问题</li>
+<li>设置启动图固定延迟时间</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mainfast.json中</span></span><br><span class="line"><span class="comment">/* 5+App特有相关 */</span></span><br><span class="line">    <span class="attr">&quot;app-plus&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;usingComponents&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;nvueStyleCompiler&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;uni-app&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;compilerVersion&quot;</span> <span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;splashscreen&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;alwaysShowBeforeRender&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;waiting&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;autoclose&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;delay&quot;</span> <span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// onLaunch 中实现</span></span><br><span class="line"><span class="comment">// #ifdef APP-PLUS  </span></span><br><span class="line"><span class="comment">// 设置2秒后主动关闭，最多设置6秒  </span></span><br><span class="line">setTimeout(() =&gt; <span class="punctuation">&#123;</span>  </span><br><span class="line">  plus.navigator.closeSplashscreen();  </span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="number">2000</span>);</span><br><span class="line"><span class="comment">// #endif</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>清除app角标</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// onShow中使用 h5+的api设置</span></span><br><span class="line"><span class="comment">// #ifdef APP-PLUS  </span></span><br><span class="line">plus.<span class="property">runtime</span>.<span class="title function_">setBadgeNumber</span>(<span class="number">0</span>);  </span><br><span class="line"><span class="comment">// #endif</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>监听网络状态</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// onLanuch 中监听事件</span></span><br><span class="line">uni.<span class="title function_">onNetworkStatusChange</span>(<span class="keyword">function</span> (<span class="params">res</span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">isConnected</span>); <span class="comment">// true是已连接, false网络已关闭</span></span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">networkType</span>); <span class="comment">// 网络类型是wifi还是3/4/5G</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>app端使用推送功能需要获取推送id: 需使用<code>uniPush 2.0</code>需要使用 <code>uni.getPushClientId()</code>方法</li>
+<li>在App端选中复制文本内容, 使用css样式 <code>user-select:auto</code></li>
+<li>国际化实现</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化, 所在目录 @src/locale.ts, 同目录有国际化资源文件 en.json、zh-Hans.json等</span></span><br><span class="line"><span class="keyword">import</span> &#123; createI18n &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-i18n&#x27;</span>  </span><br><span class="line"><span class="keyword">import</span> en <span class="keyword">from</span> <span class="string">&#x27;./en.json&#x27;</span>  </span><br><span class="line"><span class="keyword">import</span> zhHans <span class="keyword">from</span> <span class="string">&#x27;./zh-Hans.json&#x27;</span>  </span><br><span class="line"><span class="keyword">import</span> zhHant <span class="keyword">from</span> <span class="string">&#x27;./zh-Hant.json&#x27;</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment">// 设置国际化  </span></span><br><span class="line"><span class="keyword">if</span> (!uni.<span class="title function_">getStorageSync</span>(<span class="string">&#x27;moy-locale&#x27;</span>) &amp;&amp; uni.<span class="title function_">getLocale</span>()) &#123;  </span><br><span class="line">  uni.<span class="title function_">setStorageSync</span>(<span class="string">&#x27;moy-locale&#x27;</span>,  uni.<span class="title function_">getLocale</span>())  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> i18n = <span class="title function_">createI18n</span>(&#123;  </span><br><span class="line">  <span class="comment">// 使用 Composition API 模式，则需要将其设置为false  </span></span><br><span class="line">  <span class="attr">legacy</span>: <span class="literal">false</span>,  </span><br><span class="line">  <span class="attr">globalInjection</span>: <span class="literal">true</span>,  </span><br><span class="line">  <span class="attr">locale</span>: uni.<span class="title function_">getStorageSync</span>(<span class="string">&#x27;moy-locale&#x27;</span>),  </span><br><span class="line">  <span class="attr">messages</span>: &#123;  </span><br><span class="line">    <span class="attr">en</span>: &#123;  </span><br><span class="line">      ...en  </span><br><span class="line">    &#125;,  </span><br><span class="line">    <span class="string">&#x27;zh-Hans&#x27;</span>: &#123;  </span><br><span class="line">      ...zhHans, </span><br><span class="line">      <span class="comment">// 占位符的方式只能用函数式解决</span></span><br><span class="line">      <span class="string">&#x27;contact.lastSeen&#x27;</span>: <span class="function">(<span class="params">&#123;list&#125;: any</span>) =&gt;</span> <span class="string">`上次活跃 <span class="subst">$&#123;list(<span class="number">0</span>)&#125;</span> `</span>  </span><br><span class="line">    &#125;,  </span><br><span class="line">    <span class="string">&#x27;zh-Hant&#x27;</span>: &#123;  </span><br><span class="line">      ...zhHant  </span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;)  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> i18n</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="comment">// ....省略其他代码</span></span><br><span class="line"><span class="keyword">import</span> &#123; createSSRApp &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>  </span><br><span class="line"><span class="comment">// 国际化  </span></span><br><span class="line"><span class="keyword">import</span> i18n <span class="keyword">from</span> <span class="string">&#x27;./locale&#x27;</span></span><br><span class="line"><span class="comment">// ....省略其他代码</span></span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(i18n)  </span><br><span class="line"><span class="keyword">return</span> &#123;  </span><br><span class="line">  app,  </span><br><span class="line">  <span class="title class_">Pinia</span>  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// composition API中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; useI18n &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-i18n&#x27;</span></span><br><span class="line"><span class="keyword">const</span> &#123; t &#125;  = <span class="title function_">useI18n</span>()</span><br><span class="line"><span class="comment">// ......省略其他代码</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// template中使用</span></span><br><span class="line"><span class="comment">// ......省略其他代码</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span> &#123;&#123; $t(&#x27;global.message&#x27;) &#125;&#125; <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="HBuilder-打包和发布"><a href="#HBuilder-打包和发布" class="headerlink" title="HBuilder 打包和发布"></a>HBuilder 打包和发布</h2><ul>
+<li>开通unipush2.0 推送服务, 申请推送证书, 需要导出证书的.p12文件</li>
+<li>推送服务使用的unipush2.0 , 在HbuilderX中创建云环境, 再创建云函数, 命名云函数名称, 然后点击新创建的云函数名称, 选择管理扩展库, 选择扩展库的插件<code>uni-clould-push</code> , 最后编写代码逻辑上传部署函数</li>
+<li>设置启动页-必须要有自定义基座,打包后生效</li>
+<li>设置图标 (打包后生效)<ul>
+<li>图标必须是直角，不要使用圆角图标，使用圆角appstore审核不会通过</li>
+<li>打包提交appstore时，必须配置1024*1024分辨率的appstore图标，云端打包机默认使用纯白色图标</li>
+<li>发行(生产) 正式包使用发布证书制作的自定义基座是不允许运行到模拟器和真机的</li>
+</ul>
+</li>
+</ul>
+<h2 id="上架AppStore和审核"><a href="#上架AppStore和审核" class="headerlink" title="上架AppStore和审核"></a>上架AppStore和审核</h2><ul>
+<li>申请个人开发者开发者账号, 付款-688¥&#x2F;year</li>
+<li>申请证书请求文件 -&gt; 创建开发者证书 (iosDevelopment)-&gt; 安装证书然后导出.p12文件-&gt; 添加设备 -&gt; 创建描述文件<code>.mobileprovision</code>(具体操作参见: <a target="_blank" rel="noopener" href="https://ask.dcloud.net.cn/article/152">iOS证书(.p12)和描述文件(.mobileprovision)申请 - DCloud问答</a>)</li>
+</ul>
+<h3 id="审核过程"><a href="#审核过程" class="headerlink" title="审核过程"></a>审核过程</h3><h5 id="账号被调查"><a href="#账号被调查" class="headerlink" title="账号被调查"></a>账号被调查</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Hello,  </span><br><span class="line">  </span><br><span class="line">Thank you for submitting your app for review.  </span><br><span class="line">  </span><br><span class="line">We need additional time to evaluate your submission and Apple Developer Program account. Your submission status will appear as &quot;Rejected&quot; in App Store Connect while we investigate. However, we do not require a revised binary or additional information from you at this time.  </span><br><span class="line">  </span><br><span class="line">While there may be a delay due to high submission volumes, we are working to complete our review as soon as possible. If we notice any issues that require your attention, we will let you know via App Store Connect. If we find no issues with your submission or account, the submission will be approved.  </span><br><span class="line">  </span><br><span class="line">We will notify you as soon as there is new information to share. Other review inquiries may be filed via the [Apple Developer Contact Us](https://developer.apple.com/contact/topic/SC1103/subtopic/30020/solution/select) page.  </span><br><span class="line">  </span><br><span class="line">Best regards,  </span><br><span class="line">  </span><br><span class="line">App Review</span><br></pre></td></tr></table></figure>
+<h5 id="Guideline-2-1-Information-Needed"><a href="#Guideline-2-1-Information-Needed" class="headerlink" title="Guideline 2.1 - Information Needed"></a><strong>Guideline 2.1 - Information Needed</strong></h5><h5 id="Guideline-1-2-Safety-User-Generated-Content"><a href="#Guideline-1-2-Safety-User-Generated-Content" class="headerlink" title="Guideline 1.2 - Safety - User-Generated Content"></a><strong>Guideline 1.2 - Safety - User-Generated Content</strong></h5><h5 id="Guideline-1-5-Safety"><a href="#Guideline-1-5-Safety" class="headerlink" title="Guideline 1.5 - Safety"></a><strong>Guideline 1.5 - Safety</strong></h5><h5 id="Guideline-5-1-1-v-Data-Collection-and-Storage"><a href="#Guideline-5-1-1-v-Data-Collection-and-Storage" class="headerlink" title="Guideline 5.1.1(v) - Data Collection and Storage"></a><strong>Guideline 5.1.1(v) - Data Collection and Storage</strong></h5><h5 id="Guideline-2-1-Performance"><a href="#Guideline-2-1-Performance" class="headerlink" title="Guideline 2.1 - Performance"></a><strong>Guideline 2.1 - Performance</strong></h5>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/uniapp/" rel="tag"># uniapp</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+              <a href="/tags/vue3/" rel="tag"># vue3</a>
+              <a href="/tags/vite3/" rel="tag"># vite3</a>
+              <a href="/tags/myproject/" rel="tag"># myproject</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/12/04/anti/" rel="prev" title="JavaWeb应用安全漏洞方案">
+      <i class="fa fa-chevron-left"></i> JavaWeb应用安全漏洞方案
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2024/01/02/develop-mp-weixin/" rel="next" title="微信小程序开发脚手架 (by uniapp)">
+      微信小程序开发脚手架 (by uniapp) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8uniapp%E5%BC%80%E5%8F%91IOS-%E6%8A%80%E6%9C%AF%E6%A0%88-vue3-ts"><span class="nav-number">1.</span> <span class="nav-text">使用uniapp开发IOS,  技术栈 vue3 + ts</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="nav-number">1.1.</span> <span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">项目整体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.1.</span> <span class="nav-text">开发环境问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.2.</span> <span class="nav-text">配置问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.3.</span> <span class="nav-text">开发问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">编译错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A0%81"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">真机调试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B7%E5%BC%8F%E4%B8%8D%E5%85%BC%E5%AE%B9"><span class="nav-number">1.3.3.3.1.</span> <span class="nav-text">样式不兼容</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E4%B8%8D%E5%85%BC%E5%AE%B9"><span class="nav-number">1.3.3.3.2.</span> <span class="nav-text">组件不兼容</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.3.3.3.3.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBuilder-%E6%89%93%E5%8C%85%E5%92%8C%E5%8F%91%E5%B8%83"><span class="nav-number">1.4.</span> <span class="nav-text">HBuilder 打包和发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E6%9E%B6AppStore%E5%92%8C%E5%AE%A1%E6%A0%B8"><span class="nav-number">1.5.</span> <span class="nav-text">上架AppStore和审核</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A1%E6%A0%B8%E8%BF%87%E7%A8%8B"><span class="nav-number">1.5.1.</span> <span class="nav-text">审核过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B4%A6%E5%8F%B7%E8%A2%AB%E8%B0%83%E6%9F%A5"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">账号被调查</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Guideline-2-1-Information-Needed"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">Guideline 2.1 - Information Needed</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Guideline-1-2-Safety-User-Generated-Content"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">Guideline 1.2 - Safety - User-Generated Content</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Guideline-1-5-Safety"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">Guideline 1.5 - Safety</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Guideline-5-1-1-v-Data-Collection-and-Storage"><span class="nav-number">1.5.1.5.</span> <span class="nav-text">Guideline 5.1.1(v) - Data Collection and Storage</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Guideline-2-1-Performance"><span class="nav-number">1.5.1.6.</span> <span class="nav-text">Guideline 2.1 - Performance</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="olsond"
+      src="/images/avatar_olsond.jpg">
+  <p class="site-author-name" itemprop="name">olsond</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Olsondy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Olsondy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/javady" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;javady" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">olsond</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>

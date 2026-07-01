@@ -1,0 +1,24 @@
+---
+title: Blog
+description: Olsondy Blog
+subtitle: Olsondy Blog
+bgType: rose
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import TabbedLayout from '~/layouts/TabbedLayout.astro'
+import ListView from '~/components/views/ListView.astro'
+import SubNav from '~/components/nav/SubNav.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+  ogImage={frontmatter.ogImage}
+>
+  <TabbedLayout>
+    <SubNav />
+    <ListView collectionType="blog" categoryId="tech" limit={10} />
+  </TabbedLayout>
+</BaseLayout>

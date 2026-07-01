@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bocayouth.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="使用wordpress搭建个人独立站">
+<meta property="og:type" content="article">
+<meta property="og:title" content="独立站搭建流程记录">
+<meta property="og:url" content="https://bocayouth.me/articles/2024/07/02/usage-wordpress/index.html">
+<meta property="og:site_name" content="Olsond">
+<meta property="og:description" content="使用wordpress搭建个人独立站">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-07-02T02:00:31.050Z">
+<meta property="article:modified_time" content="2023-07-05T02:17:01.081Z">
+<meta property="article:author" content="olsond">
+<meta property="article:tag" content="litespeed">
+<meta property="article:tag" content="mariadb-server">
+<meta property="article:tag" content="wordpress">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bocayouth.me/articles/2024/07/02/usage-wordpress/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>独立站搭建流程记录 | Olsond</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Olsond</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">try to be alive</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Olsondy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://bocayouth.me/articles/2024/07/02/usage-wordpress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_olsond.jpg">
+      <meta itemprop="name" content="olsond">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Olsond">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          独立站搭建流程记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-07-02 10:00:31" itemprop="dateCreated datePublished" datetime="2024-07-02T10:00:31+08:00">2024-07-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-05 10:17:01" itemprop="dateModified" datetime="2023-07-05T10:17:01+08:00">2023-07-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Develop/" itemprop="url" rel="index"><span itemprop="name">Develop</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">使用wordpress搭建个人独立站</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="站点搭建"><a href="#站点搭建" class="headerlink" title="站点搭建"></a>站点搭建</h1><ul>
+<li>以 <code>ubuntu</code> 为例, <code>litespeed cache + wordpress</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建放置证书的目录(主机商提供或者自己购买) 也可放到/usr/local/lsws/conf/cert目录下</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /usr/local/ssl</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R root:root /usr/local/ssl</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> -R 400 /usr/local/ssl</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装 lsws web服务  (litespeedwebserver)</span></span><br><span class="line">wget -O - https://repo.litespeed.sh | <span class="built_in">sudo</span> bash</span><br><span class="line">apt-get install openlitespeed</span><br><span class="line"><span class="built_in">sudo</span> apt install lsphp74 lsphp74-common lsphp74-curl lsphp74-imap lsphp74-json lsphp74-mysql lsphp74-opcache lsphp74-imagick</span><br><span class="line"></span><br><span class="line"><span class="comment">#需要对象缓存可以安装以下缓存插件</span></span><br><span class="line"><span class="comment">#redis</span></span><br><span class="line"><span class="built_in">sudo</span> apt install lsphp74-redis</span><br><span class="line"><span class="built_in">sudo</span> apt install redis</span><br><span class="line"><span class="built_in">sudo</span> systemctl start redis-server</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> redis-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># memcached</span></span><br><span class="line"><span class="built_in">sudo</span> apt install lsphp74-memcached</span><br><span class="line"><span class="built_in">sudo</span> apt-get install memcached</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改php配置</span></span><br><span class="line">vi /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini</span><br><span class="line">upload_max_filesize = 50M</span><br><span class="line">post_max_size=50M</span><br><span class="line">memory_limit = 512M</span><br><span class="line"></span><br><span class="line">systemctl start lsws</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装数据库</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install mariadb-server</span><br><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br><span class="line"><span class="built_in">sudo</span> mysql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建数据库</span></span><br><span class="line">CREATE DATABASE databaseName; </span><br><span class="line">CREATE USER username@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON databaseName.* TO username@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">or </span><br><span class="line"><span class="comment"># GRANT ALL PRIVILEGES ON databaseName.* TO username@&#x27;%&#x27; identified by &#x27;password&#x27;</span></span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按需打开mariadb远程访问权限</span></span><br><span class="line">vi /etc/mysql/mariadb.conf.d/50-server.conf</span><br><span class="line"><span class="comment"># 注释掉下面内容</span></span><br><span class="line"><span class="comment"># bind-address = 127.0.0.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装wordpress</span></span><br><span class="line">wget -P /usr/local/lsws/surpoutlets/html/ https://wordpress.org/latest.tar.gz </span><br><span class="line"><span class="built_in">sudo</span> tar xvfz /usr/local/lsws/surpoutlets/html/latest.tar.gz -C /usr/local/lsws/surpoutlets/html/</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R nobody:nogroup /usr/local/lsws/surpoutlets/html/wordpress</span><br><span class="line"><span class="built_in">sudo</span> find /usr/local/lsws/surpoutlets/html/wordpress/ -<span class="built_in">type</span> d -<span class="built_in">exec</span> <span class="built_in">chmod</span> 750 &#123;&#125; \;</span><br><span class="line"><span class="built_in">sudo</span> find /usr/local/lsws/surpoutlets/html/wordpress/ -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">chmod</span> 640 &#123;&#125; \;</span><br><span class="line"></span><br><span class="line">sh /usr/local/lsws/admin/misc/admpass.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙和端口设置</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install ufw -y</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 22/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 80/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 443/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 7080/tcp  <span class="comment">#lsws服务</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow 8088/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 3360/tcp  <span class="comment">#数据库访问端口</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">enable</span></span><br><span class="line"><span class="built_in">sudo</span> ufw default deny incoming</span><br><span class="line"><span class="built_in">sudo</span> ufw default allow outgoing</span><br><span class="line"><span class="built_in">sudo</span> ufw status verbose</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Cloudflare 申请源服务器证书, 设置到lsws控制面板</li>
+<li>SSL模式修改为完全模式 即端到端都加密</li>
+</ul>
+<h2 id="已有站点-迁移"><a href="#已有站点-迁移" class="headerlink" title="已有站点-迁移"></a>已有站点-迁移</h2><h3 id="wp-stage插件"><a href="#wp-stage插件" class="headerlink" title="wp-stage插件"></a>wp-stage插件</h3><p>使用该插件直接可恢复到指定版本, 选择备份文件即可</p>
+<h3 id="手动备份"><a href="#手动备份" class="headerlink" title="手动备份"></a>手动备份</h3><h4 id="备份数据库数据"><a href="#备份数据库数据" class="headerlink" title="备份数据库数据"></a>备份数据库数据</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 原服务器导出</span></span><br><span class="line">mysqldump -uusername -ppassword dbname | gzip &gt; /data/wwwroot/www/dbname.sql.gz</span><br><span class="line"><span class="comment"># 2. 传输</span></span><br><span class="line">scp /data/wwwroot/www/dbname.sql.gz root@newserverip:/root/dbname.sql.gz</span><br><span class="line"><span class="comment"># 3. 新服务器导入</span></span><br><span class="line">gunzip &lt; /root/dbname.sql.gz | mysql -uusernameb -ppasswordb dbnamenew</span><br></pre></td></tr></table></figure>
+
+<h4 id="迁移原有站点的数据内容"><a href="#迁移原有站点的数据内容" class="headerlink" title="迁移原有站点的数据内容"></a>迁移原有站点的数据内容</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -R /usr/local/lsws/wordpress root@newserver:/usr/local/lsws/wordpress</span><br></pre></td></tr></table></figure>
+<h3 id="域名变更"><a href="#域名变更" class="headerlink" title="域名变更"></a>域名变更</h3><ul>
+<li>修改<code>cloudflare</code> 的dns解析到新的服务器地址, </li>
+<li>修改<code>litespeed web</code>的虚拟主机域名 </li>
+<li>最后需更新wordpress数据表中的相关域名地址</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> wp_posts <span class="keyword">set</span> guid  <span class="operator">=</span> replace(guid, <span class="string">&#x27;current.domain.com&#x27;</span> ,<span class="string">&#x27;target.domain.com&#x27;</span>)  </span><br><span class="line">                <span class="keyword">where</span> guid <span class="keyword">like</span> <span class="string">&#x27;current.domain.com%&#x27;</span>  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">update</span> wp_posts <span class="keyword">set</span> post_content  <span class="operator">=</span> replace(post_content, <span class="string">&#x27;https://surpoutlets.com&#x27;</span> ,<span class="string">&#x27;https://us.surpoutlets.com&#x27;</span>)  </span><br><span class="line">                <span class="keyword">where</span> post_content <span class="keyword">like</span> <span class="string">&#x27;https://surpoutlets.com%&#x27;</span></span><br><span class="line"><span class="keyword">update</span> wp_posts_meta</span><br></pre></td></tr></table></figure>
+<h3 id="迁移过后可能出现的问题"><a href="#迁移过后可能出现的问题" class="headerlink" title="迁移过后可能出现的问题"></a>迁移过后可能出现的问题</h3><h4 id="访问页面或者发布页面出现404"><a href="#访问页面或者发布页面出现404" class="headerlink" title="访问页面或者发布页面出现404"></a>访问页面或者发布页面出现404</h4><p><strong>新增&#x2F;修改页面时提示 <code>此响应不是合法的JSON响应。</code> 可以尝试以下解决办法</strong></p>
+<ul>
+<li>首先确认下服务器是否有设置伪静态规则 (其实就是一个URL转发规则) 报错的原因就是按照规则链接没有动态转换</li>
+<li>在站点<strong>设置</strong> &gt;<strong>固定连接结构</strong> 选项中修改链接的访问形式, 然后清空缓存, 再次新建或打开页面尝试</li>
+<li>删除服务器 <code>wordrpress</code> 根目录下的<code>.htaccess</code>文件,  <strong>切记!!!wordpress的目录需要设置权限</strong></li>
+<li>如果上述设置都还没有生效 <strong>重启服务器</strong></li>
+</ul>
+<h4 id="域名修改后新域名出现重定向301到老域名"><a href="#域名修改后新域名出现重定向301到老域名" class="headerlink" title="域名修改后新域名出现重定向301到老域名"></a>域名修改后新域名出现重定向301到老域名</h4><ul>
+<li>缓存问题导致的wordpress配置还是到重定向到老域名, 如使用redis 缓存, 可以登录redis服务端清除缓存</li>
+<li>关闭 <code>WP_DEBUG_DISPLAY</code>调试模式</li>
+<li>编辑 WordPress 的 <code>wp-config.php</code> 文件，这是最直接的方法。<br><strong>步骤:</strong></li>
+<li>找到 WordPress 的 <code>wp-config.php</code> 文件（通常在 WordPress 安装的根目录中）。</li>
+<li>打开文件，找到以下代码或添加相关代码（通常在 <code>define( &#39;WP_DEBUG&#39;, true );</code> 之后）：</li>
+<li>确保同时启用了 <code>WP_DEBUG</code> 和 <code>WP_DEBUG_LOG</code>，但禁用了显示功能：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">&#x27;WP_DEBUG&#x27;</span>, <span class="literal">true</span> ); <span class="comment">// 启用调试模式</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">&#x27;WP_DEBUG_LOG&#x27;</span>, <span class="literal">true</span> ); <span class="comment">// 将错误记录到 debug.log 文件</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">&#x27;WP_DEBUG_DISPLAY&#x27;</span>, <span class="literal">false</span> ); <span class="comment">// 禁止在前端显示错误</span></span><br><span class="line">@<span class="title function_ invoke__">ini_set</span>( <span class="string">&#x27;display_errors&#x27;</span>, <span class="number">0</span> ); <span class="comment">// 禁止 PHP 错误显示</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>保存文件并上传到服务器。<strong>切记!!!wordpress的目录需要设置权限</strong></li>
+</ul>
+<h4 id="elementor编辑器打不开问题-排查流程"><a href="#elementor编辑器打不开问题-排查流程" class="headerlink" title="elementor编辑器打不开问题, 排查流程:"></a>elementor编辑器打不开问题, 排查流程:</h4><ul>
+<li>安全模式是否可以打开页面</li>
+<li>新建空白页面是否可以打开</li>
+<li>浏览器控制台是否报错</li>
+<li>数据库查看<code>wp_post_meta</code>表, 找到<code>elementor_data</code>字段,  检查json内容是否有问题</li>
+</ul>
+<h4 id="wordpress-已有用户删除的问题"><a href="#wordpress-已有用户删除的问题" class="headerlink" title="wordpress 已有用户删除的问题,"></a>wordpress 已有用户删除的问题,</h4><p>导致删除此用户的之前上传或操作的内容资源不可见, 图片资源等等</p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><h3 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h3><p><strong>wordpress是CMS内容管理系统, 本身并不具备电商销售功能,所以需要集成相关插件来实现</strong></p>
+<ul>
+<li><code>页面</code>: 即单个地址访问资源的页面内容</li>
+<li><code>站点</code>: 发布之后供外部用户使用和查看</li>
+<li><code>后台</code>: wordpress管理员访问的功能</li>
+</ul>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><ul>
+<li>使用<code>Astra</code>  wordpress 主题, 适用于电商, 可以自定义站点主题设置</li>
+<li><code>WooCommerce</code> 集销售一体的电商插件</li>
+<li><code>Elementor</code> 单页面编辑插件</li>
+</ul>
+<h3 id="站点设置"><a href="#站点设置" class="headerlink" title="站点设置"></a>站点设置</h3><ul>
+<li>设置站点标题, 这里的站点指的是外部用户访问</li>
+<li>站点语言设置, 面向客户</li>
+<li>设置站点访问地址: <code>update wp_options set option_value=&#39;https://xxxxxx.com&#39; where option_name=&#39;home&#39;;</code></li>
+</ul>
+<h3 id="用户设置"><a href="#用户设置" class="headerlink" title="用户设置"></a>用户设置</h3><ul>
+<li>管理端的相关设置</li>
+<li>关闭所有用户注册</li>
+<li>语言设置, 面向后台管理员</li>
+<li>设置管理端访问地址: <code>update wp_options set option_value=&#39;https://xxxxx.com&#39; where option_name=&#39;siteurl&#39;;</code></li>
+</ul>
+<h2 id="自定义站点"><a href="#自定义站点" class="headerlink" title="自定义站点"></a>自定义站点</h2><h3 id="wordpress-设置"><a href="#wordpress-设置" class="headerlink" title="wordpress 设置"></a>wordpress 设置</h3><ul>
+<li>创建用户, 设置用户角色, 使用 <code>用户角色编辑</code>插件</li>
+<li>心愿单:  在YITH插件中开启或关闭<code>WooCommerce</code>的Wishlist功能</li>
+</ul>
+<h3 id="Astra主题自定义设置"><a href="#Astra主题自定义设置" class="headerlink" title="Astra主题自定义设置"></a>Astra主题自定义设置</h3><ul>
+<li>全局设置：  按钮字体类型、全局按钮样式</li>
+<li>页眉设置：  网站标题、logo 、菜单、小组件等布局</li>
+<li>页脚设置：  站点导航 、菜单、小组件等布局</li>
+<li><code>WooCommerce</code>设置：设置商店, 产品, 购物车, 结账等页面的相关布局</li>
+</ul>
+<h3 id="WooCommerce设置"><a href="#WooCommerce设置" class="headerlink" title="WooCommerce设置"></a>WooCommerce设置</h3><ul>
+<li>编辑产品: 设置产品的标签、分类、允许评论</li>
+<li>打开<code>WooCommerce</code> 允许会员注册功能</li>
+<li>电子邮件的设置</li>
+</ul>
+<h3 id="Wordpress-Gutenberg（古腾堡）编辑器"><a href="#Wordpress-Gutenberg（古腾堡）编辑器" class="headerlink" title="Wordpress Gutenberg（古腾堡）编辑器"></a>Wordpress Gutenberg（古腾堡）编辑器</h3><ul>
+<li>侧边栏设置: 首先需要在<code>wordpress</code>页面或者在 <code>Astra</code>设置页面类型,  是否包含侧边栏的布局, 设置后可以在<code>Astra</code>自定义设置小工具中自定义侧边栏</li>
+<li>Gutenberg（古腾堡）编辑器:  <code>Woocommerce</code> 简码功能的使用 <a target="_blank" rel="noopener" href="https://loyseo.com/tutorial/woocommerce/woocommerce-shortcodes/#ftoc-heading-15">教程</a></li>
+</ul>
+<h3 id="多语言"><a href="#多语言" class="headerlink" title="多语言"></a>多语言</h3><ul>
+<li>使用 Polylang插件</li>
+<li>在多语言菜单中翻译自定义文本内容</li>
+<li>创建页面需要设置多个语言内容</li>
+</ul>
+<h2 id="优化专题"><a href="#优化专题" class="headerlink" title="优化专题"></a>优化专题</h2><h3 id="AB-Cloak"><a href="#AB-Cloak" class="headerlink" title="AB- Cloak"></a>AB- Cloak</h3><h3 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h3><h3 id="Analytics"><a href="#Analytics" class="headerlink" title="Analytics"></a>Analytics</h3><ul>
+<li>收录网站 google search console</li>
+<li>创建<code>Google Analytics(GA4)</code>数据流</li>
+<li>将GA4绑定到<code>Google Tags Manager(GTM)</code></li>
+<li>创建自定义<code>GA Event</code></li>
+<li>在wordpress 安装 <code>Site Kit</code> 插件</li>
+</ul>
+<h3 id="SEO"><a href="#SEO" class="headerlink" title="SEO"></a>SEO</h3><h3 id="ADS"><a href="#ADS" class="headerlink" title="ADS"></a>ADS</h3><ul>
+<li>TK</li>
+<li>Meta</li>
+<li>Pinterest</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><p>查询用户类型</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    u.ID</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    wp_users u</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span></span><br><span class="line">    wp_usermeta um <span class="keyword">ON</span> u.ID <span class="operator">=</span> um.user_id</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    um.meta_key <span class="operator">=</span> <span class="string">&#x27;wp_capabilities&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> (um.meta_value <span class="keyword">LIKE</span> <span class="string">&#x27;%subscriber%&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>文章处理相关sql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_comments</span><br><span class="line"><span class="keyword">WHERE</span> comment_type <span class="operator">=</span> <span class="string">&#x27;order_note&#x27;</span>;</span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_postmeta</span><br><span class="line"><span class="keyword">WHERE</span> post_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> ID <span class="keyword">FROM</span> wp_posts <span class="keyword">WHERE</span> post_type <span class="operator">=</span> <span class="string">&#x27;shop_order&#x27;</span>);</span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_posts</span><br><span class="line"><span class="keyword">WHERE</span> post_type <span class="operator">=</span> <span class="string">&#x27;shop_order&#x27;</span>;</span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_posts</span><br><span class="line"><span class="keyword">WHERE</span> post_type <span class="operator">=</span> <span class="string">&#x27;post&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> post_author <span class="operator">=</span> <span class="number">4</span>;</span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_posts</span><br><span class="line"><span class="keyword">WHERE</span> post_status <span class="operator">=</span> <span class="string">&#x27;trash&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> wp_posts</span><br><span class="line"><span class="keyword">WHERE</span> post_type <span class="operator">=</span> <span class="string">&#x27;page&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> post_status <span class="operator">=</span> <span class="string">&#x27;publish&#x27;</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">WHERE</span> post_type <span class="operator">=</span> <span class="string">&#x27;post&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> post_author <span class="operator">=</span> <span class="number">4</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_postmeta</span><br><span class="line"><span class="keyword">where</span> post_id <span class="operator">=</span> <span class="string">&#x27;1007&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_users</span><br><span class="line"><span class="keyword">delete</span></span><br><span class="line"><span class="keyword">from</span> wp_users</span><br><span class="line"><span class="keyword">where</span> ID <span class="operator">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_options</span><br><span class="line"><span class="keyword">where</span> option_id <span class="keyword">in</span> (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">where</span> guid <span class="keyword">like</span> <span class="string">&#x27;https://surpoutlets.com%&#x27;</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">where</span> post_content <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_postmeta</span><br><span class="line"><span class="keyword">where</span> meta_value <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">where</span> id <span class="operator">=</span> <span class="string">&#x27;25482&#x27;</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">where</span> post_parent <span class="operator">=</span> <span class="string">&#x27;25482&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>价格处理相关sql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_woocommerce_order_itemmeta</span><br><span class="line"><span class="keyword">where</span> <span class="number">1</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">FROM</span> wp_woocommerce_order_items</span><br><span class="line"><span class="keyword">where</span> <span class="number">1</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"># 查询价格</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_options</span><br><span class="line"><span class="keyword">where</span> option_name <span class="keyword">like</span> <span class="string">&#x27;%_transient_wc_var_prices%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> option_name <span class="keyword">in</span> (<span class="keyword">select</span> <span class="keyword">distinct</span> concat(<span class="string">&#x27;_transient_wc_var_prices_&#x27;</span>, w.post_parent)</span><br><span class="line">                      <span class="keyword">from</span> wp_posts w</span><br><span class="line">                               <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                      <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.post_parent <span class="operator">=</span> <span class="string">&#x27;25482&#x27;</span>);</span><br><span class="line"></span><br><span class="line"># 先查单个产品</span><br><span class="line"><span class="keyword">select</span> id, post_title</span><br><span class="line"><span class="keyword">from</span> wp_posts</span><br><span class="line"><span class="keyword">where</span> post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> post_parent <span class="operator">=</span> <span class="string">&#x27;0&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 查询单个产品的价格信息</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_postmeta</span><br><span class="line"><span class="keyword">where</span> post_id <span class="keyword">in</span> (<span class="keyword">select</span> id</span><br><span class="line">                  <span class="keyword">from</span> wp_posts</span><br><span class="line">                  <span class="keyword">where</span> post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> post_parent <span class="operator">=</span> <span class="string">&#x27;0&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> id <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>))</span><br><span class="line">  <span class="keyword">and</span> meta_key <span class="keyword">like</span> <span class="string">&#x27;%price%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> meta_value <span class="operator">!=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 再查可变产品</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_posts w</span><br><span class="line">         <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line"><span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>);</span><br><span class="line"># 查询可变产品的价格信息</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_postmeta</span><br><span class="line"><span class="keyword">where</span> post_id <span class="keyword">in</span> (<span class="keyword">select</span> w.id</span><br><span class="line">                  <span class="keyword">from</span> wp_posts w</span><br><span class="line">                           <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                  <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>))</span><br><span class="line">  <span class="keyword">and</span> meta_key <span class="keyword">like</span> <span class="string">&#x27;%price%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> meta_value <span class="operator">!=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"># 查询可变产品的价格范围</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> wp_wc_product_meta_lookup</span><br><span class="line"><span class="keyword">where</span> product_id <span class="keyword">in</span> (<span class="keyword">select</span> w.id</span><br><span class="line">                     <span class="keyword">from</span> wp_posts w</span><br><span class="line">                              <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                     <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> wp_posts</span><br><span class="line"><span class="keyword">set</span> guid <span class="operator">=</span> replace(guid, <span class="string">&#x27;https://us.surpoutlets.com&#x27;</span>, <span class="string">&#x27;https://surpoutlets.com&#x27;</span>)</span><br><span class="line"><span class="keyword">where</span> guid <span class="keyword">like</span> <span class="string">&#x27;https://us.surpoutlets.com%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> wp_posts</span><br><span class="line"><span class="keyword">set</span> post_content <span class="operator">=</span> replace(post_content, <span class="string">&#x27;https://us.surpoutlets.com&#x27;</span>, <span class="string">&#x27;https://surpoutlets.com&#x27;</span>)</span><br><span class="line"><span class="keyword">where</span> post_content <span class="keyword">like</span> <span class="string">&#x27;%https://us.surpoutlets.com%&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> wp_postmeta</span><br><span class="line"><span class="keyword">set</span> meta_value <span class="operator">=</span> replace(meta_value, <span class="string">&#x27;us.surpoutlets.com&#x27;</span>, <span class="string">&#x27;surpoutlets.com&#x27;</span>)</span><br><span class="line"><span class="keyword">where</span> meta_value <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line"></span><br><span class="line"># 批量更新单个产品价格</span><br><span class="line"><span class="keyword">update</span> IGNORE wp_postmeta</span><br><span class="line"><span class="keyword">set</span> meta_value <span class="operator">=</span> round(<span class="built_in">cast</span>(meta_value <span class="keyword">as</span> <span class="type">integer</span>) <span class="operator">/</span> <span class="number">20</span>, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">where</span> post_id <span class="keyword">in</span> (<span class="keyword">select</span> id</span><br><span class="line">                  <span class="keyword">from</span> wp_posts</span><br><span class="line">                  <span class="keyword">where</span> post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> post_parent <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">                    <span class="keyword">and</span> guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> id <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>))</span><br><span class="line">  <span class="keyword">and</span> meta_key <span class="keyword">like</span> <span class="string">&#x27;%price%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> meta_value <span class="operator">!=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 批量更新可变产品价格</span><br><span class="line"><span class="keyword">update</span> IGNORE wp_postmeta</span><br><span class="line"><span class="keyword">set</span> meta_value <span class="operator">=</span> round(<span class="built_in">cast</span>(meta_value <span class="keyword">as</span> <span class="type">decimal</span>) <span class="operator">/</span> <span class="number">20</span>, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">where</span> post_id <span class="keyword">in</span> (<span class="keyword">select</span> w.id</span><br><span class="line">                  <span class="keyword">from</span> wp_posts w</span><br><span class="line">                           <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                  <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                    <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>))</span><br><span class="line">  <span class="keyword">and</span> meta_key <span class="keyword">like</span> <span class="string">&#x27;%_price%&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> meta_value <span class="operator">!=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 可变产品需要更新价格区间</span><br><span class="line"><span class="keyword">update</span> ignore wp_wc_product_meta_lookup</span><br><span class="line"><span class="keyword">set</span> min_price <span class="operator">=</span> round(<span class="built_in">cast</span>(min_price <span class="keyword">as</span> <span class="type">decimal</span>) <span class="operator">/</span> <span class="number">20</span>, <span class="number">0</span>),</span><br><span class="line">    max_price <span class="operator">=</span> round(<span class="built_in">cast</span>(max_price <span class="keyword">as</span> <span class="type">decimal</span>) <span class="operator">/</span> <span class="number">20</span>, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">where</span> product_id <span class="keyword">in</span> (<span class="keyword">select</span> w.id</span><br><span class="line">                     <span class="keyword">from</span> wp_posts w</span><br><span class="line">                              <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                     <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                       <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>));</span><br><span class="line">#删除可变产品的价格区间缓存</span><br><span class="line"><span class="keyword">delete</span></span><br><span class="line"><span class="keyword">from</span> wp_options</span><br><span class="line"><span class="keyword">where</span> option_name <span class="keyword">in</span> (<span class="keyword">select</span> <span class="keyword">distinct</span> concat(<span class="string">&#x27;_transient_wc_var_prices_&#x27;</span>, w.post_parent)</span><br><span class="line">                      <span class="keyword">from</span> wp_posts w</span><br><span class="line">                               <span class="keyword">join</span> wp_posts w1 <span class="keyword">on</span> w1.id <span class="operator">=</span> w.post_parent</span><br><span class="line">                      <span class="keyword">where</span> w1.post_type <span class="operator">=</span> <span class="string">&#x27;product&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.post_type <span class="operator">=</span> <span class="string">&#x27;product_variation&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.guid <span class="keyword">like</span> <span class="string">&#x27;%us.surpoutlets.com%&#x27;</span></span><br><span class="line">                        <span class="keyword">and</span> w.post_parent <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;25482&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="keyword">rollback</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wordpress/" rel="tag"># wordpress</a>
+              <a href="/tags/litespeed/" rel="tag"># litespeed</a>
+              <a href="/tags/mariadb-server/" rel="tag"># mariadb-server</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2024/04/03/merge-pdf/" rel="prev" title="使用itext处理PDF文件">
+      <i class="fa fa-chevron-left"></i> 使用itext处理PDF文件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2025/01/02/screencast/" rel="next" title="OS X 屏幕录制转 GIF 动画 (翻译)">
+      OS X 屏幕录制转 GIF 动画 (翻译) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%99%E7%82%B9%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">站点搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E6%9C%89%E7%AB%99%E7%82%B9-%E8%BF%81%E7%A7%BB"><span class="nav-number">1.1.</span> <span class="nav-text">已有站点-迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#wp-stage%E6%8F%92%E4%BB%B6"><span class="nav-number">1.1.1.</span> <span class="nav-text">wp-stage插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%A4%87%E4%BB%BD"><span class="nav-number">1.1.2.</span> <span class="nav-text">手动备份</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">备份数据库数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E5%8E%9F%E6%9C%89%E7%AB%99%E7%82%B9%E7%9A%84%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">迁移原有站点的数据内容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E5%8F%98%E6%9B%B4"><span class="nav-number">1.1.3.</span> <span class="nav-text">域名变更</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E8%BF%87%E5%90%8E%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.4.</span> <span class="nav-text">迁移过后可能出现的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E9%A1%B5%E9%9D%A2%E6%88%96%E8%80%85%E5%8F%91%E5%B8%83%E9%A1%B5%E9%9D%A2%E5%87%BA%E7%8E%B0404"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">访问页面或者发布页面出现404</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E4%BF%AE%E6%94%B9%E5%90%8E%E6%96%B0%E5%9F%9F%E5%90%8D%E5%87%BA%E7%8E%B0%E9%87%8D%E5%AE%9A%E5%90%91301%E5%88%B0%E8%80%81%E5%9F%9F%E5%90%8D"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">域名修改后新域名出现重定向301到老域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#elementor%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98-%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">elementor编辑器打不开问题, 排查流程:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wordpress-%E5%B7%B2%E6%9C%89%E7%94%A8%E6%88%B7%E5%88%A0%E9%99%A4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">wordpress 已有用户删除的问题,</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">开始使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.1.</span> <span class="nav-text">相关概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%99%E7%82%B9%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">站点设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.4.</span> <span class="nav-text">用户设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E7%82%B9"><span class="nav-number">1.3.</span> <span class="nav-text">自定义站点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#wordpress-%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.3.1.</span> <span class="nav-text">wordpress 设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Astra%E4%B8%BB%E9%A2%98%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">Astra主题自定义设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WooCommerce%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.3.3.</span> <span class="nav-text">WooCommerce设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wordpress-Gutenberg%EF%BC%88%E5%8F%A4%E8%85%BE%E5%A0%A1%EF%BC%89%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">Wordpress Gutenberg（古腾堡）编辑器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%AF%AD%E8%A8%80"><span class="nav-number">1.3.5.</span> <span class="nav-text">多语言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%B8%93%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">优化专题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AB-Cloak"><span class="nav-number">1.4.1.</span> <span class="nav-text">AB- Cloak</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache"><span class="nav-number">1.4.2.</span> <span class="nav-text">Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Analytics"><span class="nav-number">1.4.3.</span> <span class="nav-text">Analytics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO"><span class="nav-number">1.4.4.</span> <span class="nav-text">SEO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADS"><span class="nav-number">1.4.5.</span> <span class="nav-text">ADS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.5.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="nav-number">1.5.1.</span> <span class="nav-text">数据库操作</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="olsond"
+      src="/images/avatar_olsond.jpg">
+  <p class="site-author-name" itemprop="name">olsond</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Olsondy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Olsondy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/javady" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;javady" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">olsond</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
