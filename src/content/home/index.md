@@ -41,7 +41,6 @@ I write [blog posts](/post) about programming, AI, and life. Outside of programm
   <a href="https://nextjs.org/" target="_blank" rel="noreferrer"> 
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg" alt="nextjs" width="36" height="36"/> 
   </a>
- 
 </p>
 
 <p>
