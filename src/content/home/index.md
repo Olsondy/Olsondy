@@ -38,6 +38,9 @@ I write [blog posts](/post) about programming, AI, and life. Outside of programm
   <a href="https://nuxtjs.org/" target="_blank" rel="noreferrer"> 
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nuxtjs/nuxtjs-original.svg" alt="nuxtjs" width="36" height="36"/> 
   </a>
+  <a href="https://www.python.org" target="_blank" rel="noreferrer"> 
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="36" height="36"/> 
+  </a>
 </p>
 
 <p>
