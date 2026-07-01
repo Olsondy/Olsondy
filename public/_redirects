@@ -1,0 +1,3 @@
+/articles/:year/:month/:day/:slug /post/:year/:slug 301!
+/categories/:slug /post/category/:slug 301!
+/tags/* /post 301!
