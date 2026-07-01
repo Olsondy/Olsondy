@@ -48,3 +48,22 @@ const {
     </div>
   )
 }
+<script>
+  function hideDuplicateTitles() {
+    const pageTitle = document.querySelector('header h1')?.textContent?.trim()
+    const articleH1s = document.querySelectorAll('article.prose h1')
+    if (pageTitle) {
+      for (const h1 of articleH1s) {
+        // Rehype plugin appends a '#' for the anchor link, so we clean it up before comparing
+        const cleanH1Text = h1.textContent?.replace(/#$/, '').trim()
+        if (cleanH1Text === pageTitle) {
+          ;(h1 as HTMLElement).style.display = 'none'
+          break
+        }
+      }
+    }
+  }
+
+  hideDuplicateTitles()
+  document.addEventListener('astro:page-load', hideDuplicateTitles)
+</script>
