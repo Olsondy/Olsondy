@@ -1,8 +1,8 @@
 Hey! I'm **Olsond**, a passionate full-stack developer.
 
 Currently learning and exploring **AI Agents**<br>
-Writing technical articles regularly on **[bocayouth.me](https://bocayouth.me)**<br>
-Open for contact via **[bocayouth.me@gmail.com](mailto:bocayouth.me@gmail.com)**
+Writing technical articles regularly on **[olsond.me](https://olsond.me)**<br>
+Open for contact via **[olsond.dy@gmail.com](mailto:olsond.dy@gmail.com)**
 
 Dreaming up cool ideas and making them come true is where my passion lies. I am enthusiastic about building systems that help myself and others be more productive and enjoy the process of crafting. You can find my [full projects list here](/projects).
 
@@ -46,9 +46,9 @@ I write [blog posts](/post) about programming, AI, and life. Outside of programm
 <p>
   <span class="inline-block mr-1.5 mb-2">Find me on</span>
   <span class="inline-flex flex-wrap gap-2 op-75">
-    <a href="mailto:bocayouth.me@gmail.com">
+    <a href="mailto:olsond.dy@gmail.com">
       <span class="i-ri-mail-line"></span> Email</a>
-    <a href="https://bocayouth.me">
+    <a href="https://olsond.me">
       <span class="i-ri-global-line"></span> Website</a>
     <a href="https://github.com/Olsond">
       <span class="i-uil-github-alt"></span> GitHub</a>

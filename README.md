@@ -3,9 +3,9 @@
   
 - 🌱 I’m currently learning **AI agent**  
   
-- 📝 I regularly write articles on [https://bocayouth.me](https://bocayouth.me)  
+- 📝 I regularly write articles on [https://olsond.me](https://olsond.me)  
   
-- 📫 How to reach me **bocayouth.me@gmail.com**  
+- 📫 How to reach me **olsond.dy@gmail.com**  
   
 
 <h3 align="left">Languages and Tools:</h3>  
