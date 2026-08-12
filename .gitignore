@@ -4,6 +4,9 @@ dist/
 # generated types
 .astro/
 
+# dev background logs
+.astro-dev/
+
 # dependencies
 node_modules/
 
