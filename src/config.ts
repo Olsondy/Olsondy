@@ -8,7 +8,7 @@ export const SITE: Site = {
   author: 'Olsond',
   lang: 'zh-CN',
   ogLocale: 'en_US',
-  imageDomains: ['cdn.bsky.app', 'images.unsplash.com'],
+  imageDomains: ['cdn.bsky.app'],
 }
 
 export const UI: Ui = {
@@ -28,8 +28,8 @@ export const UI: Ui = {
   ],
   socialLinks: [
     {
-      link: 'https://github.com/lin-stephanie/astro-antfustyle-theme',
-      title: 'AntfuStyle on Github',
+      link: 'https://github.com/Olsondy',
+      title: 'Olsond on GitHub',
       displayMode: 'alwaysIcon',
       icon: 'i-uil-github-alt',
     }
@@ -121,7 +121,7 @@ export const FEATURES: Features = {
     },
   ],
   giscus: [
-    true,
+    false, // TODO: configure Olsond's own giscus repo before enabling
     {
       'data-repo': 'lin-stephanie/astro-antfustyle-theme',
       'data-repo-id': 'R_kgDOLylKbA',
@@ -138,7 +138,7 @@ export const FEATURES: Features = {
   search: [
     true,
     {
-      includes: ['blog', 'shorts', 'changelog'],
+      includes: ['blog', 'shorts'],
       filter: true,
       navHighlight: true,
       batchLoadSize: [true, 5],
