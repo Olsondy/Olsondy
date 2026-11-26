@@ -8,7 +8,7 @@ import prettier from 'eslint-config-prettier/flat'
 export default defineConfig(
   {
     // https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignoring-files-with-ignores
-    ignores: ['dist/', '.astro/', '.local/', 'hexo-backup/'],
+    ignores: ['dist/', '.astro/', '.local/'],
   },
   {
     // https://eslint.org/docs/latest/use/configure/language-options
