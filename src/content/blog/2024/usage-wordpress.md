@@ -75,6 +75,16 @@ sudo find /usr/local/lsws/surpoutlets/html/wordpress/ -type f -exec chmod 640 {}
 
 sh /usr/local/lsws/admin/misc/admpass.sh
 
+# 切换WordPress 目录
+cd /usr/local/lsws/surpoutlets/html/wordpress
+
+# 创建 test.php 并写入内容
+echo "<?php phpinfo(); ?>" | sudo tee test.php
+
+# 确保文件权限正确（让网页服务器可以读取）
+sudo chown www-data:www-data test.php
+sudo chmod 644 test.php
+
 # 防火墙和端口设置
 sudo apt update
 sudo apt install ufw -y
@@ -96,6 +106,16 @@ sudo ufw status verbose
 ## 已有站点-迁移
 ### wp-stage插件
 使用该插件直接可恢复到指定版本, 选择备份文件即可
+- 从 备份中恢复, 如备份在google drive上, 使用以下命令
+```bash
+# 安装 gdown
+sudo apt update
+sudo apt install python3-pip -y
+pip3 install gdown
+# 下载文件替换 FILE_ID 为你实际的 ID 
+gdown --id fileId
+
+```
 ### 手动备份
 #### 备份数据库数据
 ```bash

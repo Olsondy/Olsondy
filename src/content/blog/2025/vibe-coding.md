@@ -10,22 +10,31 @@ tags:
   - vuejs
 description: 使用AI智能体IDE开发全栈项目
 pubDate: '2025-12-25T17:20:12.050Z'
-lastModDate: 2025-12-26T13:10:03.081Z
+lastModDate: 2026-01-26T13:10:03.081Z
 ---
 
-# Vibe Codeing
+# Vibe Coding
 
 ## Intro
 - Using the Antigravity IDE 
 - Full-stack with Nuxt.js.
 
 ## require
-- Resend mail
-- Supabase PostgrSQL
+- Supabase PostgrSQL +  Nuxt/Auth + Redis
+- Resend mail + Email OTP
 - Cloudflare  R2 Object File
-- Social  OAuth ([Google](https://console.cloud.google.com/)、[Twitter(X)](https://developer.x.com/en/portal/dashboard))
-- [Upstash](https://https://upstash.com/) Redis (option)
-
+- Social  OAuth ([Google](https://console.cloud.google.com/)、[Twitter(X)](https://developer.x.com/en/portal/dashboard))、Goole One Tap
+- [Upstash](https://https://upstash.com/) 、Imgix
+- Redis (option)
+## resources
+- Dicebear 、Zod
+-  CCloudflare Turnstile
 ## issues
-- R2配置, 需要将公网配置打开, 并且设置CORS
-- Supabase 数据库连接不上: 默认的直连(Direct)模式,是要ipv6支持才可以的
+
+### Cloud flare R2
+- 创建存储桶
+- 存储主页右下角点击管理 -> 创建account api access, 获取AccountId, AK, SK
+- 配置域名
+- 设置CORS
+### Supabase
+- Supabase 数据库,默认的直连(Direct)模式,你电脑的ip要支持ipv6
