@@ -11,7 +11,6 @@
  *   node check-links-playwright.js --verbose
  */
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { chromium } = require('playwright');
 
 // 命令行参数解析
